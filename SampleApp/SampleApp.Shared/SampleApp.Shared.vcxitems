@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>1da055d5-45bb-4ebd-9018-2ca353943f50</SharedGUID>
+    <ItemsProjectGuid>{bdf6b7b2-185c-433e-9a55-2ed9f1f0cb45}</ItemsProjectGuid>
+    <ItemsRootNamespace>SampleApp</ItemsRootNamespace>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <ClCompile Include="$(MSBuildThisFileDirectory)App.xaml.cpp">
+      <DependentUpon>$(MSBuildThisFileDirectory)App.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)FlacMediaStreamSourcePreBufferizer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cpp">
+      <DependentUpon>$(MSBuildThisFileDirectory)MainPage.xaml</DependentUpon>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)App.xaml.h">
+      <DependentUpon>$(MSBuildThisFileDirectory)App.xaml</DependentUpon>
+    </ClInclude>
+    <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClInclude Include="$(MSBuildThisFileDirectory)FlacMediaStreamSourcePreBufferizer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)MainPage.xaml.h">
+      <DependentUpon>$(MSBuildThisFileDirectory)MainPage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Samples\Chandos_Surround_5_0_test_file.flac">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Samples\Chandos_Surround_5_1_test_file.flac">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Samples\Cybele_CD_200403_16b44k_Stereo_09.flac">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Samples\Cybele_SACD_140402_24b96k_Surround_07.flac">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Samples\Cybele_SACD_AB006_24b96k_Surround_11.flac">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Samples\Cybele_SACD_AB007_24b96k_Stereo_01.flac">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Samples\Debussy-Golliwoggs-CakeWalk-Jean-Efflam-Bavouzet.flac">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Samples\ForUntoUsSurround88.flac">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Samples\recit16bit.flac">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Samples\recit24bit.flac">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Samples\test192.flac">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Samples\Weinberg-Symphony3-Movt3-Gothenberg-Symphony-Svedlund.flac">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+</Project>

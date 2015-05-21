@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{0ebe1456-4952-41a7-8988-6779a838a727}</ItemsProjectGuid>
+    <ItemsRootNamespace>FlacPP</ItemsRootNamespace>
+    <ItemsProjectName>FlacPP.Shared</ItemsProjectName>
+    <CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)FlacModel.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\flacPP\FlacBitStream.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\flacPP\FlacBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\flacPP\FlacDecoder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\flacPP\FlacStream.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\flacPP\StreamInfo.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)rice.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)StreamHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)targetver.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)BufferedInputStream.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)FlacDecoder.cpp">
+      <AdditionalOptions>/Qvec-report:2 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)FlacBitStream.cpp">
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>

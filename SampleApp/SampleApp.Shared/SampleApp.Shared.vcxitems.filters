@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CLCompile Include="$(MSBuildThisFileDirectory)App.xaml.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)App.xaml.h" />
+    <CLCompile Include="$(MSBuildThisFileDirectory)pch.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)FlacMediaStreamSourcePreBufferizer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MainPage.xaml.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)FlacMediaStreamSourcePreBufferizer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Samples\Chandos_Surround_5_0_test_file.flac" />
+    <None Include="$(MSBuildThisFileDirectory)Samples\Chandos_Surround_5_1_test_file.flac" />
+    <None Include="$(MSBuildThisFileDirectory)Samples\Cybele_CD_200403_16b44k_Stereo_09.flac" />
+    <None Include="$(MSBuildThisFileDirectory)Samples\Cybele_SACD_140402_24b96k_Surround_07.flac" />
+    <None Include="$(MSBuildThisFileDirectory)Samples\Cybele_SACD_AB006_24b96k_Surround_11.flac" />
+    <None Include="$(MSBuildThisFileDirectory)Samples\Cybele_SACD_AB007_24b96k_Stereo_01.flac" />
+    <None Include="$(MSBuildThisFileDirectory)Samples\Debussy-Golliwoggs-CakeWalk-Jean-Efflam-Bavouzet.flac" />
+    <None Include="$(MSBuildThisFileDirectory)Samples\ForUntoUsSurround88.flac" />
+    <None Include="$(MSBuildThisFileDirectory)Samples\recit16bit.flac" />
+    <None Include="$(MSBuildThisFileDirectory)Samples\recit24bit.flac" />
+    <None Include="$(MSBuildThisFileDirectory)Samples\test192.flac" />
+    <None Include="$(MSBuildThisFileDirectory)Samples\Weinberg-Symphony3-Movt3-Gothenberg-Symphony-Svedlund.flac" />
+  </ItemGroup>
+</Project>

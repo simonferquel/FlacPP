@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)targetver.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\flacPP\FlacStream.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\flacPP\FlacBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\flacPP\FlacDecoder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\flacPP\StreamInfo.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)includes\flacPP\FlacBitStream.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)StreamHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)FlacModel.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)rice.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)FlacDecoder.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)FlacBitStream.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)BufferedInputStream.cpp" />
+  </ItemGroup>
+</Project>

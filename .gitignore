@@ -1,0 +1,15 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+*.vspx
+*.sdf
+*.suo
+*.opensdf
+**/Debug/
+**/Release/
+**/ipch/
+*.user
+/SampleApp/SampleApp.Windows/Generated Files
+/SampleApp/SampleApp.WindowsPhone/Generated Files
+*.flac
