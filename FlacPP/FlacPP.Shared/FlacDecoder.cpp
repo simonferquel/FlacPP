@@ -35,6 +35,7 @@ public:
 	}
 };
 residualCache g_residualCache;
+residualCache g_outputCache;
 
 void ConsumeFlacMagicWord(IFlacStream* stream) {
 	std::uint32_t first32Bits;
@@ -57,52 +58,50 @@ enum class subframe_type {
 
 
 
-void restoreLpcSignal(const std::vector<std::int32_t>& residual, const std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::uint8_t bps, std::int32_t* data, std::uint16_t channelCount) {
+void restoreLpcSignal(const std::vector<std::int32_t>& residual, const std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::uint8_t bps, std::vector<std::int32_t>& output, std::uint16_t ) {
 	unsigned  j;
 
-
-
-	for (auto r : residual) {
+	for (auto ix = 0u; ix < residual.size();++ix) {
 		std::int64_t sum = 0;
-		std::int32_t * history = data;
+		const std::int32_t * history = &output[order+ix];
 		for (j = 0; j < order; j++) {
-			history -= channelCount;
+			--history;
 			sum += (int64_t)qlpCoeffs[j] * (int64_t)(*(history));
 		}
-		*data = r + (std::int32_t)(sum >> lp_quantization);
-		data += channelCount;
+		output[order + ix] = residual[ix] + (std::int32_t)(sum >> lp_quantization);
 	}
+
 }
 
 
-void restoreFixedSignal(const std::vector<std::int32_t>& residual, std::uint32_t order, std::int32_t* output, std::uint16_t channelCount)
+void restoreFixedSignal(const std::vector<std::int32_t>& residual, const std::uint32_t order, std::vector<std::int32_t>& output, std::uint16_t channelCount)
 {
 	switch (order) {
 	case 0:
-		for (auto&& val : residual) {
-			*(output) = val;
-			output += channelCount;
+		for (auto ix = 0u;ix < residual.size();++ix) {
+			output[ix] = residual[ix];
 		}
+		
 		break;
 	case 1:
 		for (auto ix = 0u;ix < residual.size();++ix) {
-			output[ix*channelCount] = residual[ix] + output[channelCount* (ix - 1)];
+			output[ix+order] = residual[ix] + output[ix +order - 1];
 		}
 		break;
 	case 2:
 		for (auto ix = 0u;ix < residual.size();++ix) {
-			output[ix*channelCount] = residual[ix] + (output[channelCount* (ix - 1)] << 1) - output[channelCount* (ix - 2)];
+			output[ix + order] = residual[ix] + (output[(ix + order - 1)] << 1) - output[(ix + order - 2)];
 		}
 		break;
 
 	case 3:
 		for (auto ix = 0u;ix < residual.size();++ix) {
-			output[ix*channelCount] = residual[ix] + (((output[channelCount*(ix - 1)] - output[channelCount*(ix - 2)]) << 1) + (output[channelCount*(ix - 1)] - output[channelCount*(ix - 2)])) + output[channelCount*(ix - 3)];
+			output[ix + order] = residual[ix] + (((output[(ix + order - 1)] - output[(ix + order - 2)]) << 1) + (output[(ix + order - 1)] - output[(ix + order - 2)])) + output[(ix + order - 3)];
 		}
 		break;
 	case 4:
 		for (auto ix = 0u;ix < residual.size();++ix) {
-			output[ix*channelCount] = residual[ix] + 4 * output[channelCount*(ix - 1)] - 6 * output[channelCount*(ix - 2)] + 4 * output[channelCount*(ix - 3)] - output[channelCount*(ix - 4)];
+			output[ix + order] = residual[ix] + 4 * output[(ix + order - 1)] - 6 * output[(ix + order - 2)] + 4 * output[(ix + order - 3)] - output[(ix + order - 4)];
 		}
 		break;
 	default:
@@ -111,20 +110,21 @@ void restoreFixedSignal(const std::vector<std::int32_t>& residual, std::uint32_t
 	}
 }
 
-void readConstantSubFrameContent(std::uint8_t wastedBits, const std::uint16_t channelIndex, FlacBitStream* stream, std::int32_t* outputBuffer, std::uint8_t usefulBps, const std::uint32_t blockSize, const std::uint16_t channelCount, bool validateOnly) {
-
+void readConstantSubFrameContent(std::uint8_t wastedBits, const std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, const std::uint32_t blockSize, const std::uint16_t channelCount, bool validateOnly) {
+	outputBuffer.resize(blockSize);
 	auto constant = stream->readPartialInt32(usefulBps);
 	if (!validateOnly) {
-		for (auto ix = 0u;ix < blockSize*channelCount;ix+=channelCount) {
-			outputBuffer[ix + channelIndex] = constant;
+		for (auto ix = 0u;ix < blockSize;ix++) {
+			outputBuffer[ix] = constant;
 		}
 	}
 }
 template<std::uint8_t usefulBps>
-void readVerbatimSubFrameContent(std::uint8_t wastedBits, std::uint16_t channelIndex, FlacBitStream* stream, std::int32_t* outputBuffer, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+void readVerbatimSubFrameContent(std::uint8_t wastedBits, std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+	outputBuffer.resize(blockSize);
 	if (!validateOnly) {
-		for (auto ix = 0u;ix < blockSize;++ix) {
-			outputBuffer[ix*channelCount + channelIndex] = stream->readPartialInt32<usefulBps>();
+		for (auto ix = 0u;ix < blockSize;ix++) {
+			outputBuffer[ix] = stream->readPartialInt32<usefulBps>();
 		}
 	}
 	else {
@@ -133,7 +133,7 @@ void readVerbatimSubFrameContent(std::uint8_t wastedBits, std::uint16_t channelI
 		}
 	}
 }
-void readVerbatimSubFrameContent(std::uint8_t wastedBits, std::uint16_t channelIndex, FlacBitStream* stream, std::int32_t* outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+void readVerbatimSubFrameContent(std::uint8_t wastedBits, std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
 	switch (usefulBps) {
 	case 1:
 		readVerbatimSubFrameContent<1>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
@@ -235,14 +235,14 @@ void readVerbatimSubFrameContent(std::uint8_t wastedBits, std::uint16_t channelI
 	}
 }
 template<std::uint8_t usefulBps>
-bool readFixedSubFrameContent(std::uint8_t wastedBits, std::uint32_t order, std::uint16_t channelIndex, FlacBitStream* stream, std::int32_t* outputBuffer, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+bool readFixedSubFrameContent(std::uint8_t wastedBits, std::uint32_t order, std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
 
-
+	outputBuffer.resize(blockSize);
 	if (!validateOnly) {
 		for (auto ix = 0u; ix < order;++ix) {
 			auto val = stream->readPartialInt32<usefulBps>();
 
-			outputBuffer[ix*channelCount + channelIndex] = val;
+			outputBuffer[ix] = val;
 		}
 	}
 	else {
@@ -259,8 +259,8 @@ bool readFixedSubFrameContent(std::uint8_t wastedBits, std::uint32_t order, std:
 	if (residualCodingType == 0) {
 		// partitioned rice with 4-bits parameter
 		if (!extractResidualPartitionedRice4bits(residual, wastedBits, order, stream, usefulBps, blockSize)) {
+			g_residualCache.release(std::move(residual));
 			if (validateOnly) {
-				g_residualCache.release(std::move(residual));
 				return false;
 			}
 			throw FlacDecodingException();
@@ -269,27 +269,27 @@ bool readFixedSubFrameContent(std::uint8_t wastedBits, std::uint32_t order, std:
 	else if (residualCodingType == 1) {
 		// partitioned rice with 5-bits parameter
 		if (!extractResidualPartitionedRice5bits(residual, wastedBits, order, stream, usefulBps, blockSize)) {
+			g_residualCache.release(std::move(residual));
 			if (validateOnly) {
-				g_residualCache.release(std::move(residual));
 				return false;
 			}
 			throw FlacDecodingException();
 		}
 	}
 	else {
+		g_residualCache.release(std::move(residual));
 		if (validateOnly) {
-			g_residualCache.release(std::move(residual));
 			return false;
 		}
 		throw FlacDecodingException();
 	}
 	if (!validateOnly) {
-		restoreFixedSignal(residual, order, outputBuffer + (order*channelCount) + channelIndex, channelCount);
+		restoreFixedSignal(residual, order, outputBuffer, channelCount);
 	}
 	g_residualCache.release(std::move(residual));
 	return true;
 }
-bool readFixedSubFrameContent(std::uint8_t wastedBits, std::uint32_t order, std::uint16_t channelIndex, FlacBitStream* stream, std::int32_t* outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+bool readFixedSubFrameContent(std::uint8_t wastedBits, std::uint32_t order, std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
 	
 	switch (usefulBps) {
 	case 1:
@@ -394,14 +394,14 @@ bool readFixedSubFrameContent(std::uint8_t wastedBits, std::uint32_t order, std:
 }
 
 template<std::uint8_t usefulBps>
-bool readLpcSubFrameContent(std::uint8_t wastedBits, std::uint32_t predictorOrder, std::uint16_t channelIndex, FlacBitStream* stream, std::int32_t* outputBuffer, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+bool readLpcSubFrameContent(std::uint8_t wastedBits, std::uint32_t predictorOrder, std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
 
-
+	outputBuffer.resize(blockSize);
 	if (!validateOnly) {
 		for (auto ix = 0u; ix < predictorOrder;++ix) {
 			auto val = stream->readPartialInt32<usefulBps>();
 
-			outputBuffer[ix*channelCount + channelIndex] = val;
+			outputBuffer[ix] = val;
 		}
 	}
 	else {
@@ -433,8 +433,8 @@ bool readLpcSubFrameContent(std::uint8_t wastedBits, std::uint32_t predictorOrde
 	if (residualCodingType == 0) {
 		// partitioned rice with 4-bits parameter
 		if (!extractResidualPartitionedRice4bits(residual, wastedBits, predictorOrder, stream, usefulBps, blockSize)) {
+			g_residualCache.release(std::move(residual));
 			if (validateOnly) {
-				g_residualCache.release(std::move(residual));
 				return false;
 			}
 			throw FlacDecodingException();
@@ -443,28 +443,28 @@ bool readLpcSubFrameContent(std::uint8_t wastedBits, std::uint32_t predictorOrde
 	else if (residualCodingType == 1) {
 		// partitioned rice with 5-bits parameter
 		if (!extractResidualPartitionedRice5bits(residual, wastedBits, predictorOrder, stream, usefulBps, blockSize)) {
+			g_residualCache.release(std::move(residual));
 			if (validateOnly) {
-				g_residualCache.release(std::move(residual));
 				return false;
 			}
 			throw FlacDecodingException();
 		}
 	}
 	else {
+		g_residualCache.release(std::move(residual));
 		if (validateOnly) {
-			g_residualCache.release(std::move(residual));
 			return false;
 		}
 		throw FlacDecodingException();
 	}
 	if (!validateOnly) {
-		restoreLpcSignal(residual, qlpCoeffs, quantizedLinearPredictorCoeffShift, predictorOrder, usefulBps, outputBuffer + (predictorOrder*channelCount) + channelIndex, channelCount);
+		restoreLpcSignal(residual, qlpCoeffs, quantizedLinearPredictorCoeffShift, predictorOrder, usefulBps, outputBuffer, channelCount);
 	}
 	g_residualCache.release(std::move(residual));
 	return true;
 }
 
-bool readLpcSubFrameContent(std::uint8_t wastedBits, std::uint32_t predictorOrder, std::uint16_t channelIndex, FlacBitStream* stream, std::int32_t* outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+bool readLpcSubFrameContent(std::uint8_t wastedBits, std::uint32_t predictorOrder, std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
 	switch (usefulBps) {
 	case 1:
 		return readLpcSubFrameContent<1>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
@@ -567,7 +567,7 @@ bool readLpcSubFrameContent(std::uint8_t wastedBits, std::uint32_t predictorOrde
 	}
 }
 
-bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::int32_t* outputBuffer, const frame_header& frameHeader, bool validateOnly = false) {
+bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, const frame_header& frameHeader, bool validateOnly = false) {
 	auto headerPadding = stream->readPartialUint32<1>();
 	auto subFrameTypeRaw = stream->readPartialUint32<6>();
 	auto wastedBits = stream->readPartialUint32<1>();
@@ -656,10 +656,9 @@ bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::int32_
 	}
 
 	if (wastedBits != 0 && !validateOnly) {
-		auto base = outputBuffer + channelIndex;
-		for (auto ix = 0u; ix < frameHeader.blockSize*frameHeader.channelCount; ix+= frameHeader.channelCount) {
-			auto val = outputBuffer[ix];
-			outputBuffer[ix] = val << wastedBits;
+		for (auto ix = 0u; ix < frameHeader.blockSize; ix++) {
+			auto val =  (std::uint32_t)outputBuffer[ix];
+			outputBuffer[ix] = (std::int32_t)( val << wastedBits);
 		}
 	}
 
@@ -929,9 +928,15 @@ bool findNextFrameHeader(FlacPP::IFlacStream* stream, frame_header& header, cons
 			{
 				FlacBitStream fbs(stream);
 				for (auto ix = 0u; ix < header.channelCount;++ix) {
-					if (!readSubframe(ix, &fbs, nullptr, header, true)) {
+					auto tempV = g_outputCache.getOne();
+					if (!readSubframe(ix, &fbs, tempV, header, true)) {
+						g_outputCache.release(std::move(tempV));
 						allValid = false;
 						break;
+					}
+					else {
+						g_outputCache.release(std::move(tempV));
+
 					}
 				}
 			}
@@ -1043,11 +1048,13 @@ FlacPP::FlacBufferView FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & fr
 	readFromStream(_stream.get(), frameHeaderCRC);
 
 	frameTime = time_unit_100ns(header.firstSampleIndex * 10000000 / header.sampleRate);
+	std::vector<std::vector<int32_t>> channelsData;
 
 	{
 		FlacBitStream fbs(this->_stream.get());
 		for (std::uint16_t ix = 0;ix < header.channelCount;++ix) {
-			readSubframe(ix, &fbs, this->_outputBuffer.get(), header);
+			channelsData.push_back(g_outputCache.getOne());
+			readSubframe(ix, &fbs, channelsData[channelsData.size()-1], header);
 		}
 	}
 
@@ -1056,21 +1063,32 @@ FlacPP::FlacBufferView FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & fr
 
 	switch (header.channelAssignment) {
 	case channel_assignment::independent:
+		
+		for (auto i = 0u; i < header.blockSize; i++)
+		{
+			for (auto j = 0u;j < header.channelCount;++j) {
+				_outputBuffer[i*header.channelCount + j] = channelsData[j][i];
+			}
+		}
 		/* do nothing */
 		break;
 	case channel_assignment::left_side_stereo:
-		for (auto i = 0u; i < header.blockSize; i++)
-			_outputBuffer[i * 2 + 1] = _outputBuffer[i * 2] - _outputBuffer[i * 2 + 1];
+		for (auto i = 0u; i < header.blockSize; i++) {
+			_outputBuffer[i * 2] = channelsData[0][i];
+			_outputBuffer[i * 2 + 1] = channelsData[0][i] - channelsData[1][i];
+		}
 		break;
 	case channel_assignment::side_right_stereo:
-		for (auto i = 0u; i < header.blockSize; i++)
-			_outputBuffer[i * 2] += _outputBuffer[i * 2 + 1];
+		for (auto i = 0u; i < header.blockSize; i++) {
+			_outputBuffer[i * 2 + 1] = channelsData[1][i];
+			_outputBuffer[i * 2] = channelsData[1][i]+channelsData[0][i];
+		}
 		break;
 	case channel_assignment::mid_side_stereo:
 		for (auto i = 0u; i < header.blockSize; i++) {
 
-			auto mid = _outputBuffer[i * 2];
-			auto side = _outputBuffer[i * 2 + 1];
+			auto mid = channelsData[0][i];
+			auto side = channelsData[1][i];
 			mid <<= 1;
 			mid |= (side & 1); /* i.e. if 'side' is odd... */
 			_outputBuffer[i * 2] = (mid + side) >> 1;
@@ -1083,11 +1101,14 @@ FlacPP::FlacBufferView FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & fr
 	if (header.sampleSizeInBits < 32) {
 		const auto toShift = 32 - header.sampleSizeInBits;
 		for (auto i = 0u; i < header.blockSize*header.channelCount; i++) {
-			auto val = _outputBuffer[i];
-			_outputBuffer[i] = (val << toShift);
+			auto val = static_cast<std::uint32_t>(_outputBuffer[i]);
+			_outputBuffer[i] = static_cast<std::int32_t> (val << toShift);
 		}
 	}
 	_nextSample = header.firstSampleIndex + header.blockSize;
+	for (auto&& item : channelsData) {
+		g_outputCache.release(std::move(item));
+	}
 	return FlacBufferView(reinterpret_cast<std::uint8_t*>(_outputBuffer.get()), sizeof(std::int32_t)*header.channelCount*header.blockSize, sizeof(std::int32_t)*header.channelCount*header.blockSize);
 
 }

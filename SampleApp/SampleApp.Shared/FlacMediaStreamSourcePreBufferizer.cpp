@@ -15,6 +15,9 @@ void FlacMediaStreamSourcePreBufferizer::start()
 		FlacPP::time_unit_100ns frameTime;
 		auto decoded = that->_decoder->decodeNextFrame(frameTime);
 		if (decoded.length() == 0) {
+			if (that->_debugStream) {
+				concurrency::create_task(that->_debugStream->FlushAsync()).get();
+			}
 			return nullptr;
 		}
 		auto buffer = ref new Buffer(decoded.length());
@@ -26,6 +29,9 @@ void FlacMediaStreamSourcePreBufferizer::start()
 		buffer->Length = decoded.length();
 		TimeSpan ts;
 		ts.Duration = frameTime.count();
+		if (that->_debugStream) {
+			concurrency::create_task(that->_debugStream->WriteAsync(buffer)).get();
+		}
 		return MediaStreamSample::CreateFromBuffer(buffer, ts);
 	});
 }

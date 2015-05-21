@@ -26,6 +26,7 @@ namespace SampleApp
 	{
 	private:
 		std::shared_ptr<FlacPP::FlacDecoder> _decoder;
+		Windows::Storage::Streams::IOutputStream^ _debugStream;
 	public:
 		MainPage();
 

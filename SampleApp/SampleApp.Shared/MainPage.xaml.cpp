@@ -62,6 +62,16 @@ void SampleApp::MainPage::OnItemClick(Platform::Object^ sender, Windows::UI::Xam
 	if (!fi) {
 		return;
 	}
+
+	/*auto picker = ref new Windows::Storage::Pickers::FileSavePicker();
+	picker->FileTypeChoices->Insert(L"raw", ref new Platform::Collections::Vector<Platform::String^>{ L".raw" });
+	concurrency::create_task(picker->PickSaveFileAsync())
+		.then([this](Windows::Storage::StorageFile^ file) {
+		return concurrency::create_task(file->OpenAsync(FileAccessMode::ReadWrite));
+	}).then([this](IRandomAccessStream^ ras) {
+		this->_debugStream = ras->GetOutputStreamAt(0);
+	}).then([this,fi]() {*/
+
 	
 	concurrency::create_task(fi->File->OpenReadAsync())
 		.then([](IRandomAccessStreamWithContentType^ ras) {
@@ -72,7 +82,7 @@ void SampleApp::MainPage::OnItemClick(Platform::Object^ sender, Windows::UI::Xam
 
 		});
 	}).then([this](const std::shared_ptr<FlacPP::FlacDecoder>& decoder) {
-		auto bufferizer = std::make_shared<FlacMediaStreamSourcePreBufferizer>(decoder);
+		auto bufferizer = std::shared_ptr<FlacMediaStreamSourcePreBufferizer>(new FlacMediaStreamSourcePreBufferizer(decoder, nullptr));
 		auto mss = ref new MediaStreamSource(ref new AudioStreamDescriptor(Windows::Media::MediaProperties::AudioEncodingProperties::CreatePcm(
 			decoder->streamInfo().sampleRate,
 			decoder->streamInfo().channels,
@@ -107,4 +117,6 @@ void SampleApp::MainPage::OnItemClick(Platform::Object^ sender, Windows::UI::Xam
 	}).then([this](MediaStreamSource^ mss) {
 		this->me->SetMediaStreamSource(mss);
 	}, concurrency::task_continuation_context::use_current());
+
+	/*});*/
 }

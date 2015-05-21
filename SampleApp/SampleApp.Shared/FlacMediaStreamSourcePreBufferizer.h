@@ -7,8 +7,9 @@ class FlacMediaStreamSourcePreBufferizer : public std::enable_shared_from_this<F
 private:
 	concurrency::task<Windows::Media::Core::MediaStreamSample^> _nextSampleTask;
 	std::shared_ptr<FlacPP::FlacDecoder> _decoder;
+	Windows::Storage::Streams::IOutputStream^ _debugStream;
 public:
-	FlacMediaStreamSourcePreBufferizer(const std::shared_ptr<FlacPP::FlacDecoder>& decoder) : _decoder(decoder) {
+	FlacMediaStreamSourcePreBufferizer(const std::shared_ptr<FlacPP::FlacDecoder>& decoder, Windows::Storage::Streams::IOutputStream^ debugStream) : _decoder(decoder), _debugStream (debugStream) {
 
 	}
 	void start();
