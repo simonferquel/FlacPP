@@ -14,6 +14,8 @@ namespace FlacPP {
 		std::uint16_t bitsPerSample;
 		std::uint64_t totalSamples;
 
+		std::uint16_t outputBitsPerSample;
+
 		time_unit_100ns duration()const {
 			
 			return time_unit_100ns( totalSamples * 10000000 / sampleRate);

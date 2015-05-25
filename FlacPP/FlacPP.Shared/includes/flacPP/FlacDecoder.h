@@ -20,8 +20,7 @@ namespace FlacPP{
 	private:
 		stream_info _streamInfo;
 		std::unique_ptr<IFlacStream>_stream;
-		std::unique_ptr<std::int32_t[]> _outputBuffer;
-		std::unique_ptr<std::uint8_t[]> _inputBuffer;
+		std::unique_ptr<std::uint8_t[]> _outputBuffer;
 		std::uint64_t _posOfFirstFrame;
 		std::uint64_t _nextSample;
 		std::vector<seekpoint> _seekpoints;

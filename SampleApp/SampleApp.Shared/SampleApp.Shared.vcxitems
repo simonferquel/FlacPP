@@ -20,6 +20,7 @@
       <DependentUpon>$(MSBuildThisFileDirectory)App.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)FlacMediaStreamSourcePreBufferizer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)FlacMediaStreamSourceProvider.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cpp">
       <DependentUpon>$(MSBuildThisFileDirectory)MainPage.xaml</DependentUpon>
     </ClCompile>
@@ -30,10 +31,12 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClInclude Include="$(MSBuildThisFileDirectory)FlacMediaStreamSourcePreBufferizer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)FlacMediaStreamSourceProvider.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)MainPage.xaml.h">
       <DependentUpon>$(MSBuildThisFileDirectory)MainPage.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ProducerConsumerQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />

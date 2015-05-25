@@ -11,7 +11,10 @@
 #include <robuffer.h>
 #include <windows.storage.streams.h>
 #include <wrl.h>
-#include "FlacMediaStreamSourcePreBufferizer.h"
+#include "FlacMediaStreamSourceProvider.h"
+#include <sstream>
+#include "ProducerConsumerQueue.h"
+#include <thread>
 
 using namespace SampleApp;
 
@@ -56,6 +59,9 @@ void SampleApp::MainPage::OnLoaded(Platform::Object^ sender, Windows::UI::Xaml::
 }
 
 
+
+
+
 void SampleApp::MainPage::OnItemClick(Platform::Object^ sender, Windows::UI::Xaml::Controls::ItemClickEventArgs^ e)
 {
 	auto fi = dynamic_cast<FlacFileInfo^>(e->ClickedItem);
@@ -82,40 +88,13 @@ void SampleApp::MainPage::OnItemClick(Platform::Object^ sender, Windows::UI::Xam
 
 		});
 	}).then([this](const std::shared_ptr<FlacPP::FlacDecoder>& decoder) {
-		auto bufferizer = std::shared_ptr<FlacMediaStreamSourcePreBufferizer>(new FlacMediaStreamSourcePreBufferizer(decoder, nullptr));
-		auto mss = ref new MediaStreamSource(ref new AudioStreamDescriptor(Windows::Media::MediaProperties::AudioEncodingProperties::CreatePcm(
-			decoder->streamInfo().sampleRate,
-			decoder->streamInfo().channels,
-			32
-			)));
-		mss->CanSeek = true;
-		mss->Paused += ref new TypedEventHandler<MediaStreamSource^, Platform::Object^>([bufferizer]
-		(MediaStreamSource^ src, Platform::Object^ args){
-			bufferizer->stop();
-		});
-		mss->Starting += ref new TypedEventHandler<MediaStreamSource^, MediaStreamSourceStartingEventArgs^>(
-			[decoder, bufferizer](MediaStreamSource^ src, MediaStreamSourceStartingEventArgs^ args) {
-
-			if (args->Request->StartPosition) {
-				auto p = decoder->seek(FlacPP::time_unit_100ns(args->Request->StartPosition->Value.Duration));
-				TimeSpan ts;
-				ts.Duration = p.count();
-				args->Request->SetActualStartPosition(ts);
-			}
-			bufferizer->start();
-		});
-		auto duration = decoder->streamInfo().duration();
-		TimeSpan durationTS;
-		durationTS.Duration = duration.count();
-		mss->Duration = durationTS;
-		mss->SampleRequested += ref new TypedEventHandler<MediaStreamSource^, MediaStreamSourceSampleRequestedEventArgs^>(
-			[bufferizer](MediaStreamSource^ src, MediaStreamSourceSampleRequestedEventArgs^ args) {
-			
-			args->Request->Sample = bufferizer->getSampleAndFetchNext();
-		});
-		return mss;
+		FlacMediaStreamSourceProvider mssp(decoder);
+		return mssp.CreateMediaStreamSource();
 	}).then([this](MediaStreamSource^ mss) {
 		this->me->SetMediaStreamSource(mss);
+	/*}).then([this](std::wstring message) {
+		auto dlg = ref new Windows::UI::Popups::MessageDialog(ref new Platform::String(message.c_str()));
+		dlg->ShowAsync();*/
 	}, concurrency::task_continuation_context::use_current());
 
 	/*});*/

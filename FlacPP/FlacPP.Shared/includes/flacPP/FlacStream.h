@@ -12,7 +12,7 @@ namespace FlacPP{
 		virtual void readIntoBuffer(std::uint32_t size, FlacBufferView& buffer) = 0;
 		virtual std::uint8_t readOneByte() = 0;
 	};
-
+#ifdef WINRT
 	class BufferedInputStream : public IFlacStream
 	{
 	private:
@@ -44,4 +44,5 @@ namespace FlacPP{
 		virtual void readIntoBuffer(std::uint32_t size, FlacPP::FlacBufferView& buffer) override;
 		virtual std::uint8_t readOneByte() override;
 	};
+#endif
 }

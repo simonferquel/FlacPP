@@ -7,6 +7,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)FlacMediaStreamSourcePreBufferizer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)FlacMediaStreamSourceProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml" />
@@ -14,6 +15,8 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)MainPage.xaml.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)FlacMediaStreamSourcePreBufferizer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ProducerConsumerQueue.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)FlacMediaStreamSourceProvider.h" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml" />

@@ -10,12 +10,11 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="80" />
         </Grid.RowDefinitions>
         <ListView x:Name="lv" DisplayMemberPath="FileName"
                   SelectionMode="None"
                   IsItemClickEnabled="True"
                   ItemClick="OnItemClick"/>
-        <MediaElement Grid.Row="1" AreTransportControlsEnabled="True" x:Name="me" />
+        <MediaElement Visibility="Collapsed" AreTransportControlsEnabled="False" AudioCategory="BackgroundCapableMedia"  x:Name="me" />
     </Grid>
 </Page>

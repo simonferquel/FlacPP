@@ -19,9 +19,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleApp.Windows", "Sample
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleApp.WindowsPhone", "SampleApp\SampleApp.WindowsPhone\SampleApp.WindowsPhone.vcxproj", "{64C1E143-5369-49C9-89A6-E647B3498CE4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FlacPP.Desktop", "FlacPP\FlacPP.Desktop\FlacPP.Desktop.vcxproj", "{8A5CDD22-EBB7-4553-91CA-D77775A534E3}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SampleApp\SampleApp.Shared\SampleApp.Shared.vcxitems*{bdf6b7b2-185c-433e-9a55-2ed9f1f0cb45}*SharedItemsImports = 9
+		FlacPP\FlacPP.Shared\FlacPP.Shared.vcxitems*{8a5cdd22-ebb7-4553-91ca-d77775a534e3}*SharedItemsImports = 4
 		SampleApp\SampleApp.Shared\SampleApp.Shared.vcxitems*{64c1e143-5369-49c9-89a6-e647b3498ce4}*SharedItemsImports = 4
 		FlacPP\FlacPP.Shared\FlacPP.Shared.vcxitems*{4e8e3ddd-24e8-4f48-84af-965e53070fd3}*SharedItemsImports = 4
 		SampleApp\SampleApp.Shared\SampleApp.Shared.vcxitems*{b197685f-90f6-4634-8cf8-dc7ab775ae71}*SharedItemsImports = 4
@@ -145,6 +148,26 @@ Global
 		{64C1E143-5369-49C9-89A6-E647B3498CE4}.Release|x86.ActiveCfg = Release|Win32
 		{64C1E143-5369-49C9-89A6-E647B3498CE4}.Release|x86.Build.0 = Release|Win32
 		{64C1E143-5369-49C9-89A6-E647B3498CE4}.Release|x86.Deploy.0 = Release|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Debug|ARM.ActiveCfg = Debug|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Debug|Win32.Build.0 = Debug|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Debug|x64.ActiveCfg = Debug|x64
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Debug|x64.Build.0 = Debug|x64
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Debug|x86.ActiveCfg = Debug|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Debug|x86.Build.0 = Debug|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|Any CPU.ActiveCfg = Release|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|ARM.ActiveCfg = Release|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|Win32.ActiveCfg = Release|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|Win32.Build.0 = Release|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|x64.ActiveCfg = Release|x64
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|x64.Build.0 = Release|x64
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|x86.ActiveCfg = Release|Win32
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,5 +179,6 @@ Global
 		{BDF6B7B2-185C-433E-9A55-2ED9F1F0CB45} = {ED63F630-CB41-4A71-AA42-4095E77375DC}
 		{B197685F-90F6-4634-8CF8-DC7AB775AE71} = {ED63F630-CB41-4A71-AA42-4095E77375DC}
 		{64C1E143-5369-49C9-89A6-E647B3498CE4} = {ED63F630-CB41-4A71-AA42-4095E77375DC}
+		{8A5CDD22-EBB7-4553-91CA-D77775A534E3} = {061C78A5-1BD3-442C-809D-97CC64619C63}
 	EndGlobalSection
 EndGlobal
