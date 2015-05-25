@@ -1,4 +1,7 @@
 #pragma once
+#ifndef FLACPP_FLACBITSTREAM
+#define FLACPP_FLACBITSTREAM
+
 #include "FlacStream.h"
 #include <assert.h>
 #include <vector>
@@ -7,7 +10,7 @@
 namespace FlacPP {
 	
 
-
+	// compute a mask of bitcount bits (with bitcount <=8)
 	inline std::uint8_t subbyteMask(std::uint8_t bitcount) {
 		if (bitcount == 8) {
 			return 0xFF;
@@ -15,6 +18,7 @@ namespace FlacPP {
 		return (1u << bitcount) - 1u;
 	}
 
+	// compute a mask of bitcount bits (with bitcount <=32)
 	inline std::uint32_t subbyteMask32(std::uint8_t bitcount) {
 		if (bitcount == 32) {
 			return 0xFFFFFFFF;
@@ -23,7 +27,7 @@ namespace FlacPP {
 	}
 
 	
-
+	// stream capable of working with subbyte data
 	class FlacBitStream {
 	private:
 		IFlacStream* _innerStream;
@@ -92,8 +96,11 @@ namespace FlacPP {
 
 		
 	public:
+		// create an instance of FlacBitStream
 		FlacBitStream(IFlacStream* innerStream);
 
+		
+		// read a uint32 of less than 32 bits
 		template<std::uint8_t bits, typename returnType = std::enable_if_t<bits <= 32, std::uint32_t>>
 		returnType readPartialUint32() {
 			{
@@ -124,6 +131,7 @@ namespace FlacPP {
 
 		}
 
+		// read a uint32 of less than 32 bits
 		std::uint32_t readPartialUint32(std::uint8_t bits) {
 			{
 				if (bits <= 8) {
@@ -153,9 +161,14 @@ namespace FlacPP {
 		}
 		void skipBits(std::uint32_t bitCount);
 
+		// read unary encoded uint32 (1 => 0, 01 => 1, 001 => 2, 0001 => 3...)
 		std::uint32_t readUnaryUnsigned();
 
+		// read unary encoded uint32 (0 => 0, 10 => 1, 110 => 2, 1110 => 3...)
 		std::uint32_t readInverseUnaryUnsigned();
+
+
+		// read a int32 of less than 32 bits
 		template<std::uint8_t interestingBits>
 		std::int32_t readPartialInt32() {
 			auto res = readPartialUint32<interestingBits>();
@@ -170,6 +183,7 @@ namespace FlacPP {
 			}
 		}
 
+		// read a int32 of less than 32 bits
 		std::int32_t readPartialInt32(std::uint8_t interestingBits) {
 			auto res = readPartialUint32(interestingBits);
 			auto toShift = 32 - interestingBits;
@@ -182,6 +196,7 @@ namespace FlacPP {
 				return static_cast<std::int32_t>(res);
 			}
 		}
+		// read a rice encoded block
 		void readRiceSignedBlock(std::vector<std::int32_t>& output, std::uint32_t nvals, std::uint8_t parameter);
 
 
@@ -189,3 +204,4 @@ namespace FlacPP {
 	};
 }
 
+#endif

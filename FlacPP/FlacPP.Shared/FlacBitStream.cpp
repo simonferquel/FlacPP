@@ -11,6 +11,8 @@ inline void mergeMsbsAndLsbs(std::int32_t* output, const std::uint32_t* msbs, co
 }
 const std::uint32_t allOnes = 0xFFFFFFFF;
 
+#ifdef _MSC_VER
+#include <Windows.h>
 inline std::uint32_t countZeros(std::uint32_t word) {
 	DWORD index;
 	_BitScanReverse(&index, word);
@@ -22,7 +24,7 @@ inline std::uint32_t countZeros(std::uint32_t word) {
 	((word) <= 0xffffff ? byte_to_unary_table[word >> 16] + 8 : byte_to_unary_table[(word) >> 24]);*/
 }
 
-
+#endif
 
 
 FlacPP::FlacBitStream::FlacBitStream(IFlacStream * innerStream)

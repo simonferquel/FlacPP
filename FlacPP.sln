@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleApp.WindowsPhone", "S
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FlacPP.Desktop", "FlacPP\FlacPP.Desktop\FlacPP.Desktop.vcxproj", "{8A5CDD22-EBB7-4553-91CA-D77775A534E3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleConsoleApp", "SampleConsoleApp\SampleConsoleApp.vcxproj", "{62C6B270-D99B-49E6-AB02-08360828341D}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		SampleApp\SampleApp.Shared\SampleApp.Shared.vcxitems*{bdf6b7b2-185c-433e-9a55-2ed9f1f0cb45}*SharedItemsImports = 9
@@ -168,6 +170,24 @@ Global
 		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|x64.Build.0 = Release|x64
 		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|x86.ActiveCfg = Release|Win32
 		{8A5CDD22-EBB7-4553-91CA-D77775A534E3}.Release|x86.Build.0 = Release|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Debug|ARM.ActiveCfg = Debug|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Debug|Win32.Build.0 = Debug|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Debug|x64.ActiveCfg = Debug|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Debug|x86.ActiveCfg = Debug|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Debug|x86.Build.0 = Debug|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Release|Any CPU.ActiveCfg = Release|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Release|ARM.ActiveCfg = Release|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Release|Win32.ActiveCfg = Release|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Release|Win32.Build.0 = Release|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Release|x64.ActiveCfg = Release|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Release|x86.ActiveCfg = Release|Win32
+		{62C6B270-D99B-49E6-AB02-08360828341D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

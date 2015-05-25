@@ -1,4 +1,5 @@
 #include "pch.h"
+#ifdef WINRT
 #include "includes/flacPP/FlacStream.h"
 #include <robuffer.h>
 #include <wrl.h>
@@ -194,3 +195,5 @@ std::uint8_t FlacPP::BufferedInputStream::readOneByte()
 	++_absolutePosition;
 	return _buffer[_positionInBuffer++];
 }
+
+#endif

@@ -1,10 +1,14 @@
 #pragma once
+
+#ifndef FLACPP_RICE
+#define FLACPP_RICE
+
 #include <cstdint>
 #include <vector>
 #include "includes/flacPP/FlacBitStream.h"
 
 
-bool extractResidualPartitionedRice4bits(std::vector<std::int32_t>& output, std::uint8_t wastedBits, std::uint32_t predictorOrder, FlacPP::FlacBitStream* stream, std::uint8_t usefulBps, std::uint32_t blockSize) {
+bool extractResidualPartitionedRice4bits(std::vector<std::int32_t>& output, std::uint32_t predictorOrder, FlacPP::FlacBitStream* stream, std::uint8_t usefulBps, std::uint32_t blockSize) {
 	auto partitionOrder = stream->readPartialUint32<4>();
 	auto partitionCount = 1u << (partitionOrder);
 	if (partitionOrder == 0) {
@@ -252,7 +256,7 @@ bool extractResidualPartitionedRice4bits(std::vector<std::int32_t>& output, std:
 }
 
 
-bool extractResidualPartitionedRice5bits(std::vector<std::int32_t>& output, std::uint8_t wastedBits, std::uint32_t predictorOrder, FlacPP::FlacBitStream* stream, std::uint8_t usefulBps, std::uint32_t blockSize) {
+bool extractResidualPartitionedRice5bits(std::vector<std::int32_t>& output, std::uint32_t predictorOrder, FlacPP::FlacBitStream* stream, std::uint8_t usefulBps, std::uint32_t blockSize) {
 	auto partitionOrder = stream->readPartialUint32<4>();
 	auto partitionCount = 1u << (partitionOrder);
 
@@ -497,3 +501,5 @@ bool extractResidualPartitionedRice5bits(std::vector<std::int32_t>& output, std:
 	return true;
 
 }
+
+#endif

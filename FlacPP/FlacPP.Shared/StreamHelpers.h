@@ -1,4 +1,7 @@
 #pragma once
+
+#ifndef FLACPP_STREAMHELPERS
+#define FLACPP_STREAMHELPERS
 #include <cstdint>
 #include "includes\flacPP\FlacStream.h"
 
@@ -68,3 +71,5 @@ std::uint64_t read_utf8_uint64(FlacPP::IFlacStream* stream, std::int32_t maxByte
 	}
 	return value;
 }
+
+#endif

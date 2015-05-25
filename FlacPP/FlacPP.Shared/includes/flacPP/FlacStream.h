@@ -1,9 +1,14 @@
 #pragma once
+
+#ifndef FLACPP_FLACSTREAM
+#define FLACPP_FLACSTREAM
 #include <cstdint>
 #include <memory>
 #include "FlacBuffer.h"
+#include <istream>
 
 namespace FlacPP{
+	// byte stream interface used by the decoder
 	class IFlacStream{
 	public:
 		virtual std::uint64_t size() const = 0;
@@ -12,7 +17,55 @@ namespace FlacPP{
 		virtual void readIntoBuffer(std::uint32_t size, FlacBufferView& buffer) = 0;
 		virtual std::uint8_t readOneByte() = 0;
 	};
+
+	// implementation of IFlacStream over a std::istream (or derived)
+	class FlacStreamOveristream : public IFlacStream {
+	private:
+		std::unique_ptr<std::istream> _innerStream;
+	public:
+		FlacStreamOveristream(std::unique_ptr<std::istream>&& innerStream) : _innerStream(std::move(innerStream)) {}
+
+		virtual std::uint64_t size() const override {
+			auto pos = _innerStream->tellg();
+			_innerStream->seekg(0, std::ios_base::end);
+			auto size = _innerStream->tellg();
+			_innerStream->seekg(pos);
+			return size;
+		}
+
+		virtual std::uint64_t position() const override {
+			return _innerStream->tellg();
+		}
+
+		virtual void seek(std::uint64_t absolutePos) override {
+			_innerStream->seekg(absolutePos);
+		}
+
+
+		virtual void readIntoBuffer(std::uint32_t size, FlacBufferView& buffer) override {
+			_innerStream->read(reinterpret_cast<char*>(buffer.end()), size);
+			auto actuallyRead = static_cast<std::uint32_t>(_innerStream->gcount());
+			buffer.length( buffer.length()+ actuallyRead);
+			while (actuallyRead < size) {
+				_innerStream->read(reinterpret_cast<char*>(buffer.end()), size-actuallyRead);
+				auto thisRead = static_cast<std::uint32_t>(_innerStream->gcount());
+				if (thisRead == 0) {
+					return;
+				}
+				buffer.length(buffer.length() + thisRead);
+				actuallyRead += thisRead;
+			}
+		}
+
+		virtual std::uint8_t readOneByte() override {
+			char val;
+			_innerStream->read(&val, 1);
+			return (std::uint8_t)val;
+		}
+	};
 #ifdef WINRT
+	// implementation of IFlacStream over a WinRT IRandomAccessStream
+	// uses an internal buffer to limit the creation of temporary winrt buffer objects 
 	class BufferedInputStream : public IFlacStream
 	{
 	private:
@@ -46,3 +99,4 @@ namespace FlacPP{
 	};
 #endif
 }
+#endif

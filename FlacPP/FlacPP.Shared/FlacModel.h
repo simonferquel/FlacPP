@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef FLACPP_FLACMODEL
+#define FLACPP_FLACMODEL
+
 #include <cstdint>
 
 // type of flac metadata block
@@ -276,3 +280,4 @@ struct frame_header {
 	std::uint16_t sampleSizeInBits;
 	channel_assignment channelAssignment;
 };
+#endif

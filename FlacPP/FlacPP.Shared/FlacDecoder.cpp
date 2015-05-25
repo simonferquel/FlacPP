@@ -62,7 +62,7 @@ enum class subframe_type {
 #include <arm_neon.h>
 
 template<std::uint32_t order>
-void restoreLpcSignal(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint8_t bps, std::vector<std::int32_t>& output, std::uint16_t) {
+void restoreLpcSignal(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::vector<std::int32_t>& output) {
 	unsigned  j;
 	std::reverse(qlpCoeffs.begin(), qlpCoeffs.end());
 	for (auto ix = 0u; ix < residual.size();++ix) {
@@ -80,11 +80,12 @@ void restoreLpcSignal(const std::vector<std::int32_t>& residual, std::vector<std
 			auto h = output[ix];
 			res += (std::int64_t)coeff*(std::int64_t)h;
 		}
+		
 		output[order + ix] = residual[ix] + (std::int32_t)(res >> lp_quantization);
 	}
 
 }
-void restoreLpcSignal(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::uint8_t bps, std::vector<std::int32_t>& output, std::uint16_t) {
+void restoreLpcSignal(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::vector<std::int32_t>& output) {
 	/*switch (order)
 	{
 	case 0:
@@ -212,7 +213,7 @@ for (auto ix = 0u; ix < residual.size(); ++ix) {
 }
 
 template<std::uint32_t order>
-void restoreLpcSignal_32bit(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint8_t bps, std::vector<std::int32_t>& output, std::uint16_t) {
+void restoreLpcSignal_32bit(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::vector<std::int32_t>& output) {
 	unsigned  j;
 	std::reverse(qlpCoeffs.begin(), qlpCoeffs.end());
 	for (auto ix = 0u; ix < residual.size();++ix) {
@@ -235,7 +236,7 @@ void restoreLpcSignal_32bit(const std::vector<std::int32_t>& residual, std::vect
 
 }
 
-void restoreLpcSignal_32bit(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::uint8_t bps, std::vector<std::int32_t>& output, std::uint16_t) {
+void restoreLpcSignal_32bit(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::vector<std::int32_t>& output) {
 	/*switch (order) {
 	case 0:
 		restoreLpcSignal_32bit<0>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
@@ -359,7 +360,7 @@ for (auto ix = 0u; ix < residual.size(); ++ix) {
 }
 }
 template<std::uint32_t order>
-void restoreLpcSignal_16bit(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint8_t bps, std::vector<std::int32_t>& output, std::uint16_t) {
+void restoreLpcSignal_16bit(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::vector<std::int32_t>& output) {
 	unsigned  j;
 	std::reverse(qlpCoeffs.begin(), qlpCoeffs.end());
 	for (auto ix = 0u; ix < residual.size();++ix) {
@@ -391,7 +392,7 @@ void restoreLpcSignal_16bit(const std::vector<std::int32_t>& residual, std::vect
 	}
 
 }
-void restoreLpcSignal_16bit(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::uint8_t bps, std::vector<std::int32_t>& output, std::uint16_t) {
+void restoreLpcSignal_16bit(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::vector<std::int32_t>& output) {
 	/*switch (order) {
 	case 0:
 		restoreLpcSignal_16bit<0>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
@@ -526,7 +527,7 @@ for (auto ix = 0u; ix < residual.size(); ++ix) {
 }
 #else
 
-void restoreLpcSignal(const std::vector<std::int32_t>& residual, const std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::uint8_t bps, std::vector<std::int32_t>& output, std::uint16_t) {
+void restoreLpcSignal(const std::vector<std::int32_t>& residual, const std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::vector<std::int32_t>& output) {
 	unsigned  j;
 
 	for (auto ix = 0u; ix < residual.size();++ix) {
@@ -539,7 +540,7 @@ void restoreLpcSignal(const std::vector<std::int32_t>& residual, const std::vect
 	}
 
 }
-void restoreLpcSignal_32bit(const std::vector<std::int32_t>& residual, const std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::uint8_t bps, std::vector<std::int32_t>& output, std::uint16_t) {
+void restoreLpcSignal_32bit(const std::vector<std::int32_t>& residual, const std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::vector<std::int32_t>& output) {
 	unsigned  j;
 
 	for (auto ix = 0u; ix < residual.size();++ix) {
@@ -552,7 +553,7 @@ void restoreLpcSignal_32bit(const std::vector<std::int32_t>& residual, const std
 	}
 
 }
-void restoreLpcSignal_16bit(const std::vector<std::int32_t>& residual, const std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::uint8_t bps, std::vector<std::int32_t>& output, std::uint16_t) {
+void restoreLpcSignal_16bit(const std::vector<std::int32_t>& residual, const std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::vector<std::int32_t>& output) {
 	unsigned  j;
 
 	for (auto ix = 0u; ix < residual.size();++ix) {
@@ -571,7 +572,7 @@ void restoreLpcSignal_16bit(const std::vector<std::int32_t>& residual, const std
 
 
 
-void restoreFixedSignal(const std::vector<std::int32_t>& residual, const std::uint32_t order, std::vector<std::int32_t>& output, std::uint16_t channelCount)
+void restoreFixedSignal(const std::vector<std::int32_t>& residual, const std::uint32_t order, std::vector<std::int32_t>& output)
 {
 	switch (order) {
 	case 0:
@@ -607,7 +608,7 @@ void restoreFixedSignal(const std::vector<std::int32_t>& residual, const std::ui
 	}
 }
 
-void readConstantSubFrameContent(std::uint8_t wastedBits, const std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, const std::uint32_t blockSize, const std::uint16_t channelCount, bool validateOnly) {
+void readConstantSubFrameContent(FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, const std::uint32_t blockSize,  bool validateOnly) {
 	outputBuffer.resize(blockSize);
 	auto constant = stream->readPartialInt32(usefulBps);
 	if (!validateOnly) {
@@ -617,7 +618,7 @@ void readConstantSubFrameContent(std::uint8_t wastedBits, const std::uint16_t ch
 	}
 }
 template<std::uint8_t usefulBps>
-void readVerbatimSubFrameContent(std::uint8_t wastedBits, std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+void readVerbatimSubFrameContent(FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, bool validateOnly) {
 	outputBuffer.resize(blockSize);
 	if (!validateOnly) {
 		for (auto ix = 0u;ix < blockSize;ix++) {
@@ -630,109 +631,109 @@ void readVerbatimSubFrameContent(std::uint8_t wastedBits, std::uint16_t channelI
 		}
 	}
 }
-void readVerbatimSubFrameContent(std::uint8_t wastedBits, std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+void readVerbatimSubFrameContent(FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, bool validateOnly) {
 	switch (usefulBps) {
 	case 1:
-		readVerbatimSubFrameContent<1>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<1>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 2:
-		readVerbatimSubFrameContent<2>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<2>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 3:
-		readVerbatimSubFrameContent<3>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<3>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 4:
-		readVerbatimSubFrameContent<4>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<4>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 5:
-		readVerbatimSubFrameContent<5>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<5>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 6:
-		readVerbatimSubFrameContent<6>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<6>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 7:
-		readVerbatimSubFrameContent<7>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<7>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 8:
-		readVerbatimSubFrameContent<8>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<8>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 9:
-		readVerbatimSubFrameContent<9>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<9>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 10:
-		readVerbatimSubFrameContent<10>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<10>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 11:
-		readVerbatimSubFrameContent<11>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<11>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 12:
-		readVerbatimSubFrameContent<12>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<12>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 13:
-		readVerbatimSubFrameContent<13>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<13>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 14:
-		readVerbatimSubFrameContent<14>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<14>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 15:
-		readVerbatimSubFrameContent<15>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<15>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 16:
-		readVerbatimSubFrameContent<16>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<16>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 17:
-		readVerbatimSubFrameContent<17>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<17>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 18:
-		readVerbatimSubFrameContent<18>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<18>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 19:
-		readVerbatimSubFrameContent<19>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<19>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 20:
-		readVerbatimSubFrameContent<20>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<20>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 21:
-		readVerbatimSubFrameContent<21>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<21>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 22:
-		readVerbatimSubFrameContent<22>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<22>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 23:
-		readVerbatimSubFrameContent<23>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<23>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 24:
-		readVerbatimSubFrameContent<24>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<24>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 25:
-		readVerbatimSubFrameContent<25>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<25>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 26:
-		readVerbatimSubFrameContent<26>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<26>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 27:
-		readVerbatimSubFrameContent<27>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<27>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 28:
-		readVerbatimSubFrameContent<28>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<28>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 29:
-		readVerbatimSubFrameContent<29>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<29>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 30:
-		readVerbatimSubFrameContent<30>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<30>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 31:
-		readVerbatimSubFrameContent<31>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<31>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 	case 32:
-		readVerbatimSubFrameContent<32>(wastedBits, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		readVerbatimSubFrameContent<32>(stream, outputBuffer, blockSize, validateOnly);
 		break;
 
 	}
 }
 template<std::uint8_t usefulBps>
-bool readFixedSubFrameContent(std::uint8_t wastedBits, std::uint32_t order, std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, bool validateOnly) {
 
 	outputBuffer.resize(blockSize);
 	if (!validateOnly) {
@@ -755,7 +756,7 @@ bool readFixedSubFrameContent(std::uint8_t wastedBits, std::uint32_t order, std:
 	std::vector<std::int32_t> residual = g_residualCache.getOne();
 	if (residualCodingType == 0) {
 		// partitioned rice with 4-bits parameter
-		if (!extractResidualPartitionedRice4bits(residual, wastedBits, order, stream, usefulBps, blockSize)) {
+		if (!extractResidualPartitionedRice4bits(residual, order, stream, usefulBps, blockSize)) {
 			g_residualCache.release(std::move(residual));
 			if (validateOnly) {
 				return false;
@@ -765,7 +766,7 @@ bool readFixedSubFrameContent(std::uint8_t wastedBits, std::uint32_t order, std:
 	}
 	else if (residualCodingType == 1) {
 		// partitioned rice with 5-bits parameter
-		if (!extractResidualPartitionedRice5bits(residual, wastedBits, order, stream, usefulBps, blockSize)) {
+		if (!extractResidualPartitionedRice5bits(residual, order, stream, usefulBps, blockSize)) {
 			g_residualCache.release(std::move(residual));
 			if (validateOnly) {
 				return false;
@@ -781,108 +782,108 @@ bool readFixedSubFrameContent(std::uint8_t wastedBits, std::uint32_t order, std:
 		throw FlacDecodingException();
 	}
 	if (!validateOnly) {
-		restoreFixedSignal(residual, order, outputBuffer, channelCount);
+		restoreFixedSignal(residual, order, outputBuffer);
 	}
 	g_residualCache.release(std::move(residual));
 	return true;
 }
-bool readFixedSubFrameContent(std::uint8_t wastedBits, std::uint32_t order, std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, bool validateOnly) {
 	
 	switch (usefulBps) {
 	case 1:
-		return readFixedSubFrameContent<1>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<1>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 2:
-		return readFixedSubFrameContent<2>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<2>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 3:
-		return readFixedSubFrameContent<3>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<3>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 4:
-		return readFixedSubFrameContent<4>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<4>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 5:
-		return readFixedSubFrameContent<5>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<5>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 6:
-		return readFixedSubFrameContent<6>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<6>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 7:
-		return readFixedSubFrameContent<7>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<7>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 8:
-		return readFixedSubFrameContent<8>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<8>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 9:
-		return readFixedSubFrameContent<9>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<9>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 10:
-		return readFixedSubFrameContent<10>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<10>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 11:
-		return readFixedSubFrameContent<11>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<11>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 12:
-		return readFixedSubFrameContent<12>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<12>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 13:
-		return readFixedSubFrameContent<13>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<13>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 14:
-		return readFixedSubFrameContent<14>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<14>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 15:
-		return readFixedSubFrameContent<15>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<15>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 16:
-		return readFixedSubFrameContent<16>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<16>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 17:
-		return readFixedSubFrameContent<17>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<17>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 18:
-		return readFixedSubFrameContent<18>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<18>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 19:
-		return readFixedSubFrameContent<19>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<19>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 20:
-		return readFixedSubFrameContent<20>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<20>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 21:
-		return readFixedSubFrameContent<21>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<21>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 22:
-		return readFixedSubFrameContent<22>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<22>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 23:
-		return readFixedSubFrameContent<23>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<23>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 24:
-		return readFixedSubFrameContent<24>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<24>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 25:
-		return readFixedSubFrameContent<25>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<25>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 26:
-		return readFixedSubFrameContent<26>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<26>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 27:
-		return readFixedSubFrameContent<27>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<27>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 28:
-		return readFixedSubFrameContent<28>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<28>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 29:
-		return readFixedSubFrameContent<29>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<29>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 30:
-		return readFixedSubFrameContent<30>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<30>(order, stream, outputBuffer, blockSize, validateOnly);
 		
 	case 31:
-		return readFixedSubFrameContent<31>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<31>(order, stream, outputBuffer, blockSize, validateOnly);
 	case 32:
-		return readFixedSubFrameContent<32>(wastedBits, order, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readFixedSubFrameContent<32>(order, stream, outputBuffer, blockSize, validateOnly);
 
 	default:
 		return false;
@@ -901,7 +902,7 @@ static inline std::uint32_t FLAC__bitmath_ilog2(std::uint32_t v)
 }
 
 template<std::uint8_t usefulBps>
-bool readLpcSubFrameContent(std::uint8_t wastedBits, std::uint32_t predictorOrder, std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+bool readLpcSubFrameContent(std::uint32_t predictorOrder, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, bool validateOnly) {
 
 	outputBuffer.resize(blockSize);
 	if (!validateOnly) {
@@ -939,7 +940,7 @@ bool readLpcSubFrameContent(std::uint8_t wastedBits, std::uint32_t predictorOrde
 	std::vector<std::int32_t> residual = g_residualCache.getOne();
 	if (residualCodingType == 0) {
 		// partitioned rice with 4-bits parameter
-		if (!extractResidualPartitionedRice4bits(residual, wastedBits, predictorOrder, stream, usefulBps, blockSize)) {
+		if (!extractResidualPartitionedRice4bits(residual, predictorOrder, stream, usefulBps, blockSize)) {
 			g_residualCache.release(std::move(residual));
 			if (validateOnly) {
 				return false;
@@ -949,7 +950,7 @@ bool readLpcSubFrameContent(std::uint8_t wastedBits, std::uint32_t predictorOrde
 	}
 	else if (residualCodingType == 1) {
 		// partitioned rice with 5-bits parameter
-		if (!extractResidualPartitionedRice5bits(residual, wastedBits, predictorOrder, stream, usefulBps, blockSize)) {
+		if (!extractResidualPartitionedRice5bits(residual, predictorOrder, stream, usefulBps, blockSize)) {
 			g_residualCache.release(std::move(residual));
 			if (validateOnly) {
 				return false;
@@ -968,117 +969,117 @@ bool readLpcSubFrameContent(std::uint8_t wastedBits, std::uint32_t predictorOrde
 		if (usefulBps + quantizedLinearPredictorCoeffPrecision + FLAC__bitmath_ilog2(predictorOrder) <= 32) {
 			if (usefulBps <= 16 && quantizedLinearPredictorCoeffPrecision <= 16)
 			{
-				restoreLpcSignal_16bit(residual, qlpCoeffs, quantizedLinearPredictorCoeffShift, predictorOrder, usefulBps, outputBuffer, channelCount);
+				restoreLpcSignal_16bit(residual, qlpCoeffs, quantizedLinearPredictorCoeffShift, predictorOrder, outputBuffer);
 			}
 			else {
-				restoreLpcSignal_32bit(residual, qlpCoeffs, quantizedLinearPredictorCoeffShift, predictorOrder, usefulBps, outputBuffer, channelCount);
+				restoreLpcSignal_32bit(residual, qlpCoeffs, quantizedLinearPredictorCoeffShift, predictorOrder, outputBuffer);
 			}
 		}
 		else {
-			restoreLpcSignal(residual, qlpCoeffs, quantizedLinearPredictorCoeffShift, predictorOrder, usefulBps, outputBuffer, channelCount);
+			restoreLpcSignal(residual, qlpCoeffs, quantizedLinearPredictorCoeffShift, predictorOrder, outputBuffer);
 		}
 	}
 	g_residualCache.release(std::move(residual));
 	return true;
 }
 
-bool readLpcSubFrameContent(std::uint8_t wastedBits, std::uint32_t predictorOrder, std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, std::uint16_t channelCount, bool validateOnly) {
+bool readLpcSubFrameContent(std::uint32_t predictorOrder,FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, bool validateOnly) {
 	switch (usefulBps) {
 	case 1:
-		return readLpcSubFrameContent<1>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<1>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 2:
-		return readLpcSubFrameContent<2>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<2>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 3:
-		return readLpcSubFrameContent<3>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<3>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 4:
-		return readLpcSubFrameContent<4>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<4>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 5:
-		return readLpcSubFrameContent<5>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<5>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 6:
-		return readLpcSubFrameContent<6>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<6>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 7:
-		return readLpcSubFrameContent<7>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<7>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 8:
-		return readLpcSubFrameContent<8>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<8>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 9:
-		return readLpcSubFrameContent<9>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<9>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 10:
-		return readLpcSubFrameContent<10>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<10>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 11:
-		return readLpcSubFrameContent<11>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<11>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 12:
-		return readLpcSubFrameContent<12>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<12>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 13:
-		return readLpcSubFrameContent<13>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<13>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 14:
-		return readLpcSubFrameContent<14>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<14>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 15:
-		return readLpcSubFrameContent<15>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<15>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 16:
-		return readLpcSubFrameContent<16>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<16>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 17:
-		return readLpcSubFrameContent<17>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<17>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 18:
-		return readLpcSubFrameContent<18>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<18>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 19:
-		return readLpcSubFrameContent<19>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<19>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 20:
-		return readLpcSubFrameContent<20>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<20>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 21:
-		return readLpcSubFrameContent<21>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<21>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 22:
-		return readLpcSubFrameContent<22>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<22>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 23:
-		return readLpcSubFrameContent<23>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<23>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 24:
-		return readLpcSubFrameContent<24>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<24>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 25:
-		return readLpcSubFrameContent<25>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<25>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 26:
-		return readLpcSubFrameContent<26>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<26>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 27:
-		return readLpcSubFrameContent<27>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<27>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 28:
-		return readLpcSubFrameContent<28>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<28>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 29:
-		return readLpcSubFrameContent<29>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<29>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 30:
-		return readLpcSubFrameContent<30>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<30>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 31:
-		return readLpcSubFrameContent<31>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<31>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	case 32:
-		return readLpcSubFrameContent<32>(wastedBits, predictorOrder, channelIndex, stream, outputBuffer, blockSize, channelCount, validateOnly);
+		return readLpcSubFrameContent<32>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
 
 	default:
 		return false;
@@ -1126,7 +1127,7 @@ bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::vector
 	if (subFrameTypeRaw >= 0x20) {
 		subframeType = subframe_type::lpc;
 		order = (subFrameTypeRaw - 0x20) + 1;
-		if (!readLpcSubFrameContent(wastedBits, order, channelIndex, stream, outputBuffer, bps, frameHeader.blockSize, frameHeader.channelCount, validateOnly)) {
+		if (!readLpcSubFrameContent(order, stream, outputBuffer, bps, frameHeader.blockSize, validateOnly)) {
 			if (validateOnly) {
 				return false;
 			}
@@ -1150,7 +1151,7 @@ bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::vector
 			}
 			throw FlacDecodingException();
 		}
-		if (!readFixedSubFrameContent(wastedBits, order, channelIndex, stream, outputBuffer, bps, frameHeader.blockSize, frameHeader.channelCount, validateOnly)) {
+		if (!readFixedSubFrameContent( order, stream, outputBuffer, bps, frameHeader.blockSize, validateOnly)) {
 			if (validateOnly) {
 				return false;
 			}
@@ -1166,11 +1167,11 @@ bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::vector
 	}
 	else if (subFrameTypeRaw == 0x1) {
 		subframeType = subframe_type::verbatim;
-		readVerbatimSubFrameContent(wastedBits, channelIndex, stream, outputBuffer, bps, frameHeader.blockSize, frameHeader.channelCount,validateOnly);
+		readVerbatimSubFrameContent(stream, outputBuffer, bps, frameHeader.blockSize, validateOnly);
 	}
 	else {
 		subframeType = subframe_type::constant;
-		readConstantSubFrameContent(wastedBits, channelIndex, stream, outputBuffer, bps, frameHeader.blockSize, frameHeader.channelCount,validateOnly);
+		readConstantSubFrameContent(stream, outputBuffer, bps, frameHeader.blockSize, validateOnly);
 	}
 
 	if (wastedBits != 0 && !validateOnly) {
@@ -1587,7 +1588,7 @@ FlacPP::FlacBufferView FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & fr
 
 	std::uint16_t frameContentCRC;
 	readFromStream(_stream.get(), frameContentCRC);
-	auto bytesPerSample = _streamInfo.outputBitsPerSample / 8;
+	auto bytesPerSample = _streamInfo.outputBitsPerSample / 8u;
 	auto skippedBytesPerSample = 0;
 	switch (header.channelAssignment) {
 	case channel_assignment::independent:
