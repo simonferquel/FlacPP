@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "includes\flacPP\FlacBitStream.h"
 #include <vector>
+#include "BitHandling.h"
 
 
 inline void mergeMsbsAndLsbs(std::int32_t* output, const std::uint32_t* msbs, const std::uint32_t* lsbs, std::uint32_t shift, std::uint32_t nvals) {
@@ -22,6 +23,10 @@ inline std::uint32_t countZeros(std::uint32_t word) {
 	((word) <= 0xff ? byte_to_unary_table[word] + 24 : byte_to_unary_table[(word) >> 8] + 16) :
 
 	((word) <= 0xffffff ? byte_to_unary_table[word >> 16] + 8 : byte_to_unary_table[(word) >> 24]);*/
+}
+#else
+inline std::uint32_t countZeros(std::uint32_t v) {
+	return __builtin_clz(v);
 }
 
 #endif
@@ -89,7 +94,7 @@ void FlacPP::FlacBitStream::readRiceSignedBlock(std::vector<std::int32_t>& outpu
 		if (loadedBytes % 4 != 0) {
 			loadedWords += 1;
 		}
-		currentWord = _byteswap_ulong(localData[0]);
+		currentWord = FlacPP::swapEndiannes(localData[0]);
 	}
 
 	if (parameter == 0) {
@@ -111,7 +116,7 @@ void FlacPP::FlacBitStream::readRiceSignedBlock(std::vector<std::int32_t>& outpu
 						}
 						currentWordIndex = 0;
 					}
-					currentWord = _byteswap_ulong(localData[currentWordIndex]);
+					currentWord = FlacPP::swapEndiannes(localData[currentWordIndex]);
 					consumedBitsInCurrentWord = 0;
 				}
 				auto testWord = currentWord << consumedBitsInCurrentWord;
@@ -158,7 +163,7 @@ void FlacPP::FlacBitStream::readRiceSignedBlock(std::vector<std::int32_t>& outpu
 						}
 						currentWordIndex = 0;
 					}
-					currentWord = _byteswap_ulong(localData[currentWordIndex]);
+					currentWord = FlacPP::swapEndiannes(localData[currentWordIndex]);
 					consumedBitsInCurrentWord = 0;
 				}
 				auto testWord = currentWord << consumedBitsInCurrentWord;
@@ -190,7 +195,7 @@ void FlacPP::FlacBitStream::readRiceSignedBlock(std::vector<std::int32_t>& outpu
 						}
 						currentWordIndex = 0;
 					}
-					currentWord = _byteswap_ulong(localData[currentWordIndex]);
+					currentWord = FlacPP::swapEndiannes(localData[currentWordIndex]);
 					consumedBitsInCurrentWord = 0;
 				}
 				if (consumedBitsInCurrentWord == 0) {

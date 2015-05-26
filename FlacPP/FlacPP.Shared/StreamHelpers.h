@@ -8,10 +8,10 @@
 // read arbitrary type from a IFlacStream object
 template <typename T>
 void readFromStream(FlacPP::IFlacStream* stream, T& value) {
-	FlacBufferView buf(reinterpret_cast<std::uint8_t*>(&value), sizeof(T));
+	FlacPP::FlacBufferView buf(reinterpret_cast<std::uint8_t*>(&value), sizeof(T));
 	stream->readIntoBuffer(sizeof(T), buf);
 	if (buf.length() != sizeof(T)) {
-		throw FlacDecodingException();
+		throw FlacPP::FlacDecodingException();
 	}
 }
 

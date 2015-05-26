@@ -63,7 +63,7 @@ namespace FlacPP {
 			}
 		}
 
-		template<std::uint8_t bitCount>
+		template<std::uint32_t bitCount>
 		std::uint8_t readSubByteData()
 		{
 			auto remainingBits = 8 - _consumedBitsInCurrentByte;
@@ -101,32 +101,32 @@ namespace FlacPP {
 
 		
 		// read a uint32 of less than 32 bits
-		template<std::uint8_t bits, typename returnType = std::enable_if_t<bits <= 32, std::uint32_t>>
+		template<std::uint8_t bits, typename returnType = typename std::enable_if<bits <= 32, std::uint32_t>::type>
 		returnType readPartialUint32() {
 			{
 				if (bits <= 8) {
 					return readSubByteData<bits>();
 				}
-				if (bits <= 16) {
+				else if (bits <= 16) {
 					auto p0 = (std::uint32_t) readSubByteData<8>();
-					auto p1 = (std::uint32_t) readSubByteData<bits - 8>();
+					auto p1 = (std::uint32_t) readSubByteData<bits - 8u>();
 					return (p0 << (bits - 8)) | p1;
 				}
 
-				if (bits <= 24) {
+				else if (bits <= 24) {
 					auto p0 = (std::uint32_t) readSubByteData<8>();
 					auto p1 = (std::uint32_t) readSubByteData<8>();
-					auto p2 = (std::uint32_t) readSubByteData<bits - 16>();
+					auto p2 = (std::uint32_t) readSubByteData<bits - 16u>();
 					return (p0 << (bits - 8)) | (p1 << (bits - 16)) | p2;
 				}
 
-
-				auto p0 = (std::uint32_t) readSubByteData<8>();
-				auto p1 = (std::uint32_t) readSubByteData<8>();
-				auto p2 = (std::uint32_t) readSubByteData<8>();
-				auto p3 = (std::uint32_t) readSubByteData<bits - 24>();
-				return (p0 << (bits - 8)) | (p1 << (bits - 16)) | (p2 << (bits - 24)) | p3;
-
+				else {
+					auto p0 = (std::uint32_t) readSubByteData<8>();
+					auto p1 = (std::uint32_t) readSubByteData<8>();
+					auto p2 = (std::uint32_t) readSubByteData<8>();
+					auto p3 = (std::uint32_t) readSubByteData<bits - 24u>();
+					return (p0 << (bits - 8)) | (p1 << (bits - 16)) | (p2 << (bits - 24)) | p3;
+				}
 			}
 
 		}

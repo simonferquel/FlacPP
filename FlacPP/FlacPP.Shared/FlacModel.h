@@ -4,6 +4,7 @@
 #define FLACPP_FLACMODEL
 
 #include <cstdint>
+#include <BitHandling.h>
 
 // type of flac metadata block
 enum class metadata_block_type : std::uint8_t {
@@ -69,7 +70,7 @@ struct metadata_block_header {
 		return static_cast<metadata_block_type>(data_parts.data_firstbyte & 0x7F);
 	}
 	std::uint32_t blockSizeInBytes()const {
-		return _byteswap_ulong(data_whole) & 0x00FFFFFF;
+		return FlacPP::swapEndiannes(data_whole) & 0x00FFFFFF;
 	}
 };
 
@@ -83,10 +84,10 @@ struct streaminfo_raw {
 	std::uint8_t md5[16];
 
 	std::uint16_t minBlockSize() const {
-		return _byteswap_ushort(minBlockSizeRaw);
+		return FlacPP::swapEndiannes(minBlockSizeRaw);
 	}
 	std::uint16_t maxBlockSize() const {
-		return _byteswap_ushort(maxBlockSizeRaw);
+		return FlacPP::swapEndiannes(maxBlockSizeRaw);
 	}
 	std::uint32_t minFrameSize()const {
 		return (minFrameSizeRaw[0] << 16) | (minFrameSizeRaw[1] << 8) | minFrameSizeRaw[2];
@@ -105,7 +106,7 @@ struct streaminfo_raw {
 		return 1 + ((sampleRateChannelsBitsPerSampleAndTotalSamplesFirst4Bits[2] & 1) << 4) | (sampleRateChannelsBitsPerSampleAndTotalSamplesFirst4Bits[3] >> 4);
 	}
 	std::uint64_t totalSamples()const {
-		return (((std::uint64_t)(sampleRateChannelsBitsPerSampleAndTotalSamplesFirst4Bits[3] & 0xF)) << (std::uint64_t)32) | _byteswap_ulong(totalSamplesLast4Bytes);
+		return (((std::uint64_t)(sampleRateChannelsBitsPerSampleAndTotalSamplesFirst4Bits[3] & 0xF)) << (std::uint64_t)32) | FlacPP::swapEndiannes(totalSamplesLast4Bytes);
 	}
 };
 
@@ -260,13 +261,13 @@ struct seek_point_raw {
 	std::uint64_t _bytesOffsetFromFirstFrameHeaderRaw;
 	std::uint16_t _sampleCountRaw;
 	std::uint64_t firstSampleIndex() const {
-		return _byteswap_uint64(_firstSampleIndexRaw);
+		return FlacPP::swapEndiannes(_firstSampleIndexRaw);
 	}
 	std::uint64_t bytesOffsetFromFirstFrameHeader() const {
-		return _byteswap_uint64(_bytesOffsetFromFirstFrameHeaderRaw);
+		return FlacPP::swapEndiannes(_bytesOffsetFromFirstFrameHeaderRaw);
 	}
 	std::uint16_t sampleCount() const {
-		return _byteswap_ushort(_sampleCountRaw);
+		return FlacPP::swapEndiannes(_sampleCountRaw);
 	}
 };
 

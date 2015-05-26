@@ -11,6 +11,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)StreamHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)FlacModel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)rice.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)BitHandling.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp">

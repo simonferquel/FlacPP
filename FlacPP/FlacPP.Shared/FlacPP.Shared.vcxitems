@@ -14,6 +14,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)BitHandling.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)FlacModel.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)includes\flacPP\FlacBitStream.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)includes\flacPP\FlacBuffer.h" />
@@ -28,7 +29,7 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)BufferedInputStream.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)FlacDecoder.cpp">
-      <AdditionalOptions>/Qvec-report:2 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)FlacBitStream.cpp">
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>

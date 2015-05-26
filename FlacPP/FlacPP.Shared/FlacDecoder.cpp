@@ -10,7 +10,6 @@
 #include "rice.h"
 #include <algorithm> 
 #include <mutex>
-
 using namespace FlacPP;
 
 class residualCache {
@@ -58,7 +57,6 @@ enum class subframe_type {
 
 
 #if defined(_M_ARM)
-#include <armintr.h>
 #include <arm_neon.h>
 
 template<std::uint32_t order>
@@ -894,11 +892,14 @@ bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::v
 
 static inline std::uint32_t FLAC__bitmath_ilog2(std::uint32_t v)
 {
-	
+#ifdef _MSC_VER
+
 		unsigned long idx;
 		_BitScanReverse(&idx, v);
 		return idx;
-	
+#else
+	return 31 - __builtin_clz(v);
+#endif
 }
 
 template<std::uint8_t usefulBps>
@@ -1309,7 +1310,7 @@ bool peekCurrentFrameHeader(FlacPP::IFlacStream* stream, frame_header& header, s
 	else if (blockSizeStrategy == blocksize_strategy::grab16bits) {
 		std::uint16_t temp;
 		readFromStream(stream, temp);
-		header.blockSize = _byteswap_ushort(temp) + 1;
+		header.blockSize = FlacPP::swapEndiannes(temp) + 1;
 	}
 
 	if (sampleRateStrategy == samplerate_strategy::grab8BitsKHz) {
@@ -1320,13 +1321,13 @@ bool peekCurrentFrameHeader(FlacPP::IFlacStream* stream, frame_header& header, s
 	else if (sampleRateStrategy == samplerate_strategy::grab16BitsHz) {
 		std::uint16_t temp;
 		readFromStream(stream, temp);
-		header.sampleRate = static_cast<std::uint32_t>(_byteswap_ushort(temp));
+		header.sampleRate = static_cast<std::uint32_t>(FlacPP::swapEndiannes(temp));
 	}
 	else if (sampleRateStrategy == samplerate_strategy::grab16Bits10Hz) {
 
 		std::uint16_t temp;
 		readFromStream(stream, temp);
-		header.sampleRate = static_cast<std::uint32_t>(_byteswap_ushort(temp)) * 10;
+		header.sampleRate = static_cast<std::uint32_t>(FlacPP::swapEndiannes(temp)) * 10;
 	}
 
 	std::uint8_t frameHeaderCRC;
@@ -1473,7 +1474,7 @@ bool findNextFrameHeader(FlacPP::IFlacStream* stream, frame_header& header, cons
 				std::uint16_t readCrc;
 				auto sizeOfCrcedData = stream->position() - headPos;
 				readFromStream(stream, readCrc);
-				readCrc = _byteswap_ushort(readCrc);
+				readCrc = FlacPP::swapEndiannes(readCrc);
 				
 				stream->seek(headPos);
 				std::uint16_t computedContentCrc = 0;
@@ -1552,7 +1553,7 @@ FlacPP::FlacBufferView FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & fr
 	else if (blockSizeStrategy == blocksize_strategy::grab16bits) {
 		std::uint16_t temp;
 		readFromStream(_stream.get(), temp);
-		header.blockSize = _byteswap_ushort(temp) + 1;
+		header.blockSize = FlacPP::swapEndiannes(temp) + 1;
 	}
 
 	if (sampleRateStrategy == samplerate_strategy::grab8BitsKHz) {
@@ -1563,13 +1564,13 @@ FlacPP::FlacBufferView FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & fr
 	else if (sampleRateStrategy == samplerate_strategy::grab16BitsHz) {
 		std::uint16_t temp;
 		readFromStream(_stream.get(), temp);
-		header.sampleRate = static_cast<std::uint32_t>(_byteswap_ushort(temp));
+		header.sampleRate = static_cast<std::uint32_t>(FlacPP::swapEndiannes(temp));
 	}
 	else if (sampleRateStrategy == samplerate_strategy::grab16Bits10Hz) {
 
 		std::uint16_t temp;
 		readFromStream(_stream.get(), temp);
-		header.sampleRate = static_cast<std::uint32_t>(_byteswap_ushort(temp)) * 10;
+		header.sampleRate = static_cast<std::uint32_t>(FlacPP::swapEndiannes(temp)) * 10;
 	}
 
 	std::uint8_t frameHeaderCRC;
@@ -1679,7 +1680,7 @@ std::uint64_t FlacPP::FlacDecoder::seekSample(std::uint64_t sample)
 	auto minFrameSearchPos = _posOfFirstFrame;
 	auto maxFrameSearchPos = _stream->size()- _streamInfo.maxFrameSizeInBytes;
 	
-	auto startSeekOffset = static_cast<std::uint64_t>(std::floor(minFrameSearchPos + (maxFrameSearchPos - minFrameSearchPos)*relativeSeekPos));
+	auto startSeekOffset = static_cast<std::uint64_t>((minFrameSearchPos + (maxFrameSearchPos - minFrameSearchPos)*relativeSeekPos));
 	_stream->seek(startSeekOffset);
 	for (;;) {
 		
