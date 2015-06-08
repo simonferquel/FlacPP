@@ -12,29 +12,6 @@
 #include <mutex>
 using namespace FlacPP;
 
-class residualCache {
-private:
-	std::vector<std::vector<std::int32_t>> _data;
-	std::mutex _mut;
-public:
-	std::vector<std::int32_t> getOne() {
-		std::lock_guard<std::mutex> lg(_mut);
-		std::vector<std::int32_t> result;
-		if (_data.size() > 0) {
-			result = std::move(_data[_data.size() - 1]);
-			
-			_data.resize(_data.size() - 1);
-		}
-		return std::move(result);
-	}
-	void release(std::vector<std::int32_t>&& data) {
-		data.resize(0);
-		std::lock_guard<std::mutex> lg(_mut);
-		_data.push_back(std::move(data));
-	}
-};
-residualCache g_residualCache;
-residualCache g_outputCache;
 
 void ConsumeFlacMagicWord(IFlacStream* stream) {
 	std::uint32_t first32Bits;
@@ -731,7 +708,7 @@ void readVerbatimSubFrameContent(FlacBitStream* stream, std::vector<std::int32_t
 	}
 }
 template<std::uint8_t usefulBps>
-bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, bool validateOnly) {
+bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, bool validateOnly, FlacPP::temp_buffer_cache& residualCache) {
 
 	outputBuffer.resize(blockSize);
 	if (!validateOnly) {
@@ -751,11 +728,11 @@ bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::v
 
 
 	auto residualCodingType = stream->readPartialUint32(2);
-	std::vector<std::int32_t> residual = g_residualCache.getOne();
+	std::vector<std::int32_t> residual = residualCache.getOne();
 	if (residualCodingType == 0) {
 		// partitioned rice with 4-bits parameter
 		if (!extractResidualPartitionedRice4bits(residual, order, stream, usefulBps, blockSize)) {
-			g_residualCache.release(std::move(residual));
+			residualCache.release(std::move(residual));
 			if (validateOnly) {
 				return false;
 			}
@@ -765,7 +742,7 @@ bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::v
 	else if (residualCodingType == 1) {
 		// partitioned rice with 5-bits parameter
 		if (!extractResidualPartitionedRice5bits(residual, order, stream, usefulBps, blockSize)) {
-			g_residualCache.release(std::move(residual));
+			residualCache.release(std::move(residual));
 			if (validateOnly) {
 				return false;
 			}
@@ -773,7 +750,7 @@ bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::v
 		}
 	}
 	else {
-		g_residualCache.release(std::move(residual));
+		residualCache.release(std::move(residual));
 		if (validateOnly) {
 			return false;
 		}
@@ -782,106 +759,106 @@ bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::v
 	if (!validateOnly) {
 		restoreFixedSignal(residual, order, outputBuffer);
 	}
-	g_residualCache.release(std::move(residual));
+	residualCache.release(std::move(residual));
 	return true;
 }
-bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, bool validateOnly) {
+bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, bool validateOnly, FlacPP::temp_buffer_cache& residualCache) {
 	
 	switch (usefulBps) {
 	case 1:
-		return readFixedSubFrameContent<1>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<1>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 2:
-		return readFixedSubFrameContent<2>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<2>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 3:
-		return readFixedSubFrameContent<3>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<3>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 4:
-		return readFixedSubFrameContent<4>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<4>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 5:
-		return readFixedSubFrameContent<5>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<5>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 6:
-		return readFixedSubFrameContent<6>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<6>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 7:
-		return readFixedSubFrameContent<7>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<7>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 8:
-		return readFixedSubFrameContent<8>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<8>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 9:
-		return readFixedSubFrameContent<9>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<9>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 10:
-		return readFixedSubFrameContent<10>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<10>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 11:
-		return readFixedSubFrameContent<11>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<11>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 12:
-		return readFixedSubFrameContent<12>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<12>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 13:
-		return readFixedSubFrameContent<13>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<13>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 14:
-		return readFixedSubFrameContent<14>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<14>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 15:
-		return readFixedSubFrameContent<15>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<15>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 16:
-		return readFixedSubFrameContent<16>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<16>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 17:
-		return readFixedSubFrameContent<17>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<17>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 18:
-		return readFixedSubFrameContent<18>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<18>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 19:
-		return readFixedSubFrameContent<19>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<19>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 20:
-		return readFixedSubFrameContent<20>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<20>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 21:
-		return readFixedSubFrameContent<21>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<21>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 22:
-		return readFixedSubFrameContent<22>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<22>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 23:
-		return readFixedSubFrameContent<23>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<23>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 24:
-		return readFixedSubFrameContent<24>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<24>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 25:
-		return readFixedSubFrameContent<25>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<25>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 26:
-		return readFixedSubFrameContent<26>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<26>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 27:
-		return readFixedSubFrameContent<27>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<27>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 28:
-		return readFixedSubFrameContent<28>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<28>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 29:
-		return readFixedSubFrameContent<29>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<29>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 30:
-		return readFixedSubFrameContent<30>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<30>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 		
 	case 31:
-		return readFixedSubFrameContent<31>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<31>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 	case 32:
-		return readFixedSubFrameContent<32>(order, stream, outputBuffer, blockSize, validateOnly);
+		return readFixedSubFrameContent<32>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	default:
 		return false;
@@ -903,7 +880,7 @@ static inline std::uint32_t FLAC__bitmath_ilog2(std::uint32_t v)
 }
 
 template<std::uint8_t usefulBps>
-bool readLpcSubFrameContent(std::uint32_t predictorOrder, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, bool validateOnly) {
+bool readLpcSubFrameContent(std::uint32_t predictorOrder, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint32_t blockSize, bool validateOnly, FlacPP::temp_buffer_cache& residualCache) {
 
 	outputBuffer.resize(blockSize);
 	if (!validateOnly) {
@@ -938,11 +915,11 @@ bool readLpcSubFrameContent(std::uint32_t predictorOrder, FlacBitStream* stream,
 	}
 	auto residualCodingType = stream->readPartialUint32<2>();
 
-	std::vector<std::int32_t> residual = g_residualCache.getOne();
+	std::vector<std::int32_t> residual = residualCache.getOne();
 	if (residualCodingType == 0) {
 		// partitioned rice with 4-bits parameter
 		if (!extractResidualPartitionedRice4bits(residual, predictorOrder, stream, usefulBps, blockSize)) {
-			g_residualCache.release(std::move(residual));
+			residualCache.release(std::move(residual));
 			if (validateOnly) {
 				return false;
 			}
@@ -952,7 +929,7 @@ bool readLpcSubFrameContent(std::uint32_t predictorOrder, FlacBitStream* stream,
 	else if (residualCodingType == 1) {
 		// partitioned rice with 5-bits parameter
 		if (!extractResidualPartitionedRice5bits(residual, predictorOrder, stream, usefulBps, blockSize)) {
-			g_residualCache.release(std::move(residual));
+			residualCache.release(std::move(residual));
 			if (validateOnly) {
 				return false;
 			}
@@ -960,7 +937,7 @@ bool readLpcSubFrameContent(std::uint32_t predictorOrder, FlacBitStream* stream,
 		}
 	}
 	else {
-		g_residualCache.release(std::move(residual));
+		residualCache.release(std::move(residual));
 		if (validateOnly) {
 			return false;
 		}
@@ -980,114 +957,114 @@ bool readLpcSubFrameContent(std::uint32_t predictorOrder, FlacBitStream* stream,
 			restoreLpcSignal(residual, qlpCoeffs, quantizedLinearPredictorCoeffShift, predictorOrder, outputBuffer);
 		}
 	}
-	g_residualCache.release(std::move(residual));
+	residualCache.release(std::move(residual));
 	return true;
 }
 
-bool readLpcSubFrameContent(std::uint32_t predictorOrder,FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, bool validateOnly) {
+bool readLpcSubFrameContent(std::uint32_t predictorOrder,FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, bool validateOnly, FlacPP::temp_buffer_cache& residualCache) {
 	switch (usefulBps) {
 	case 1:
-		return readLpcSubFrameContent<1>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<1>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 2:
-		return readLpcSubFrameContent<2>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<2>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 3:
-		return readLpcSubFrameContent<3>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<3>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 4:
-		return readLpcSubFrameContent<4>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<4>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 5:
-		return readLpcSubFrameContent<5>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<5>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 6:
-		return readLpcSubFrameContent<6>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<6>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 7:
-		return readLpcSubFrameContent<7>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<7>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 8:
-		return readLpcSubFrameContent<8>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<8>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 9:
-		return readLpcSubFrameContent<9>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<9>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 10:
-		return readLpcSubFrameContent<10>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<10>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 11:
-		return readLpcSubFrameContent<11>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<11>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 12:
-		return readLpcSubFrameContent<12>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<12>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 13:
-		return readLpcSubFrameContent<13>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<13>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 14:
-		return readLpcSubFrameContent<14>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<14>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 15:
-		return readLpcSubFrameContent<15>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<15>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 16:
-		return readLpcSubFrameContent<16>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<16>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 17:
-		return readLpcSubFrameContent<17>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<17>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 18:
-		return readLpcSubFrameContent<18>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<18>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 19:
-		return readLpcSubFrameContent<19>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<19>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 20:
-		return readLpcSubFrameContent<20>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<20>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 21:
-		return readLpcSubFrameContent<21>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<21>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 22:
-		return readLpcSubFrameContent<22>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<22>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 23:
-		return readLpcSubFrameContent<23>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<23>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 24:
-		return readLpcSubFrameContent<24>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<24>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 25:
-		return readLpcSubFrameContent<25>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<25>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 26:
-		return readLpcSubFrameContent<26>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<26>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 27:
-		return readLpcSubFrameContent<27>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<27>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 28:
-		return readLpcSubFrameContent<28>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<28>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 29:
-		return readLpcSubFrameContent<29>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<29>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 30:
-		return readLpcSubFrameContent<30>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<30>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 31:
-		return readLpcSubFrameContent<31>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<31>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	case 32:
-		return readLpcSubFrameContent<32>(predictorOrder, stream, outputBuffer, blockSize, validateOnly);
+		return readLpcSubFrameContent<32>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
 
 	default:
 		return false;
 	}
 }
 
-bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, const frame_header& frameHeader, bool validateOnly = false) {
+bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, const frame_header& frameHeader, bool validateOnly, FlacPP::temp_buffer_cache& residualCache) {
 	auto headerPadding = stream->readPartialUint32<1>();
 	auto subFrameTypeRaw = stream->readPartialUint32<6>();
 	auto wastedBits = stream->readPartialUint32<1>();
@@ -1128,7 +1105,7 @@ bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::vector
 	if (subFrameTypeRaw >= 0x20) {
 		subframeType = subframe_type::lpc;
 		order = (subFrameTypeRaw - 0x20) + 1;
-		if (!readLpcSubFrameContent(order, stream, outputBuffer, bps, frameHeader.blockSize, validateOnly)) {
+		if (!readLpcSubFrameContent(order, stream, outputBuffer, bps, frameHeader.blockSize, validateOnly, residualCache)) {
 			if (validateOnly) {
 				return false;
 			}
@@ -1152,7 +1129,7 @@ bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::vector
 			}
 			throw FlacDecodingException();
 		}
-		if (!readFixedSubFrameContent( order, stream, outputBuffer, bps, frameHeader.blockSize, validateOnly)) {
+		if (!readFixedSubFrameContent( order, stream, outputBuffer, bps, frameHeader.blockSize, validateOnly, residualCache)) {
 			if (validateOnly) {
 				return false;
 			}
@@ -1251,7 +1228,6 @@ FlacPP::FlacDecoder::FlacDecoder(std::unique_ptr<IFlacStream>&& stream)
 		}
 	}
 	_posOfFirstFrame = _stream->position();
-	_outputBuffer.reset(new std::uint8_t[this->_streamInfo.maxBlockSizeInSamples*_streamInfo.channels*(_streamInfo.outputBitsPerSample/8u)]);
 }
 
 
@@ -1410,7 +1386,7 @@ std::uint16_t const crc16_table[256] = {
 	0x8213,  0x0216,  0x021c,  0x8219,  0x0208,  0x820d,  0x8207,  0x0202
 };
 
-bool findNextFrameHeader(FlacPP::IFlacStream* stream, frame_header& header, const stream_info& streamInfo, std::uint64_t sampleToFind) {
+bool findNextFrameHeader(FlacPP::IFlacStream* stream, frame_header& header, const stream_info& streamInfo, std::uint64_t sampleToFind, FlacPP::temp_buffer_cache& outputBufCache, FlacPP::temp_buffer_cache& residualCache) {
 	auto headPos = stream->position();
 	for (;;) {
 		if (headPos + 2 >= stream->size()) {
@@ -1457,14 +1433,14 @@ bool findNextFrameHeader(FlacPP::IFlacStream* stream, frame_header& header, cons
 			{
 				FlacBitStream fbs(stream);
 				for (auto ix = 0u; ix < header.channelCount;++ix) {
-					auto tempV = g_outputCache.getOne();
-					if (!readSubframe(ix, &fbs, tempV, header, true)) {
-						g_outputCache.release(std::move(tempV));
+					auto tempV = outputBufCache.getOne();
+					if (!readSubframe(ix, &fbs, tempV, header, true, residualCache)) {
+						outputBufCache.release(std::move(tempV));
 						allValid = false;
 						break;
 					}
 					else {
-						g_outputCache.release(std::move(tempV));
+						outputBufCache.release(std::move(tempV));
 
 					}
 				}
@@ -1510,6 +1486,20 @@ FlacPP::FlacBufferView FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & fr
 	if (_stream->position() == _stream->size()) {
 		return FlacBufferView(nullptr, 0, 0);
 	}
+	if (!_outputBuffer) {
+
+		_outputBuffer.reset(new std::uint8_t[this->_streamInfo.maxBlockSizeInSamples*_streamInfo.channels*(_streamInfo.outputBitsPerSample / 8u)]);
+	}
+	FlacBufferView buf(_outputBuffer.get(), this->_streamInfo.maxBlockSizeInSamples*_streamInfo.channels*(_streamInfo.outputBitsPerSample / 8u));
+	decodeNextFrame(frameTime, buf);
+	return buf;
+}
+void FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & frameTime, FlacBufferView & buf)
+{
+	if (_stream->position() == _stream->size()) {
+		return;
+	}
+	
 	frame_header_fixed_part_raw fixedPartOfHeader;
 	readFromStream(_stream.get(), fixedPartOfHeader);
 
@@ -1536,7 +1526,7 @@ FlacPP::FlacBufferView FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & fr
 	if (sampleSizeStrategy == samplesize_strategy::from_streaminfo) {
 		header.sampleSizeInBits = this->_streamInfo.bitsPerSample;
 	}
-	auto frameOrSampleIndex = read_utf8_uint64(_stream.get(), 64/8);
+	auto frameOrSampleIndex = read_utf8_uint64(_stream.get(), 64 / 8);
 	if (blockingStrategy == blocking_strategy::encode_sample_number) {
 		header.firstSampleIndex = frameOrSampleIndex;
 	}
@@ -1582,24 +1572,29 @@ FlacPP::FlacBufferView FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & fr
 	{
 		FlacBitStream fbs(this->_stream.get());
 		for (std::uint16_t ix = 0;ix < header.channelCount;++ix) {
-			channelsData.push_back(g_outputCache.getOne());
-			readSubframe(ix, &fbs, channelsData[channelsData.size()-1], header);
+			channelsData.push_back(_outputBufferCache.getOne());
+			readSubframe(ix, &fbs, channelsData[channelsData.size() - 1], header, false, _residualBufferCache);
 		}
 	}
 
 	std::uint16_t frameContentCRC;
 	readFromStream(_stream.get(), frameContentCRC);
 	auto bytesPerSample = _streamInfo.outputBitsPerSample / 8u;
+	if (buf.remainingCapacity() < bytesPerSample*_streamInfo.channels * header.blockSize) {
+		throw FlacDecodingException();
+	}
+	auto output = buf.end();
+	buf.length(buf.length() + bytesPerSample*_streamInfo.channels * header.blockSize);
 	auto skippedBytesPerSample = 0;
 	switch (header.channelAssignment) {
 	case channel_assignment::independent:
-		
+
 		for (auto i = 0u; i < header.blockSize; i++)
 		{
 			for (auto j = 0u;j < header.channelCount;++j) {
-				auto ptr = reinterpret_cast<std::uint8_t*>( &channelsData[j][i]);
+				auto ptr = reinterpret_cast<std::uint8_t*>(&channelsData[j][i]);
 				for (auto byteix = 0u;byteix < bytesPerSample;++byteix) {
-					_outputBuffer[i*header.channelCount*bytesPerSample + j*bytesPerSample + byteix] = *(ptr + skippedBytesPerSample + byteix);
+					output[i*header.channelCount*bytesPerSample + j*bytesPerSample + byteix] = *(ptr + skippedBytesPerSample + byteix);
 				}
 			}
 		}
@@ -1611,19 +1606,19 @@ FlacPP::FlacBufferView FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & fr
 			auto val1 = channelsData[0][i] - channelsData[1][i];
 			auto ptr1 = reinterpret_cast<std::uint8_t*>(&val1);
 			for (auto byteix = 0u;byteix < bytesPerSample;++byteix) {
-				_outputBuffer[i * 2 * bytesPerSample + byteix] = *(ptr0 + skippedBytesPerSample + byteix);
-				_outputBuffer[i * 2 * bytesPerSample+ bytesPerSample + byteix] = *(ptr1 + skippedBytesPerSample + byteix);
+				output[i * 2 * bytesPerSample + byteix] = *(ptr0 + skippedBytesPerSample + byteix);
+				output[i * 2 * bytesPerSample + bytesPerSample + byteix] = *(ptr1 + skippedBytesPerSample + byteix);
 			}
 		}
 		break;
 	case channel_assignment::side_right_stereo:
 		for (auto i = 0u; i < header.blockSize; i++) {
-			auto ptr1= reinterpret_cast<std::uint8_t*>(&channelsData[1][i]);
-			auto val0 = channelsData[1][i]+channelsData[0][i];
+			auto ptr1 = reinterpret_cast<std::uint8_t*>(&channelsData[1][i]);
+			auto val0 = channelsData[1][i] + channelsData[0][i];
 			auto ptr0 = reinterpret_cast<std::uint8_t*>(&val0);
 			for (auto byteix = 0u;byteix < bytesPerSample;++byteix) {
-				_outputBuffer[i * 2 * bytesPerSample + byteix] = *(ptr0 + skippedBytesPerSample + byteix);
-				_outputBuffer[i * 2 * bytesPerSample + bytesPerSample + byteix] = *(ptr1 + skippedBytesPerSample + byteix);
+				output[i * 2 * bytesPerSample + byteix] = *(ptr0 + skippedBytesPerSample + byteix);
+				output[i * 2 * bytesPerSample + bytesPerSample + byteix] = *(ptr1 + skippedBytesPerSample + byteix);
 			}
 		}
 		break;
@@ -1640,20 +1635,18 @@ FlacPP::FlacBufferView FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & fr
 			auto ptr0 = reinterpret_cast<std::uint8_t*>(&val0);
 			auto ptr1 = reinterpret_cast<std::uint8_t*>(&val1);
 			for (auto byteix = 0u;byteix < bytesPerSample;++byteix) {
-				_outputBuffer[i * 2 * bytesPerSample + byteix] = *(ptr0 + skippedBytesPerSample + byteix);
-				_outputBuffer[i * 2 * bytesPerSample + bytesPerSample + byteix] = *(ptr1 + skippedBytesPerSample + byteix);
+				output[i * 2 * bytesPerSample + byteix] = *(ptr0 + skippedBytesPerSample + byteix);
+				output[i * 2 * bytesPerSample + bytesPerSample + byteix] = *(ptr1 + skippedBytesPerSample + byteix);
 			}
 		}
 		break;
 	}
 
-	
+
 	_nextSample = header.firstSampleIndex + header.blockSize;
 	for (auto&& item : channelsData) {
-		g_outputCache.release(std::move(item));
+		_outputBufferCache.release(std::move(item));
 	}
-	return FlacBufferView(reinterpret_cast<std::uint8_t*>(_outputBuffer.get()), bytesPerSample*header.channelCount*header.blockSize, bytesPerSample*header.channelCount*header.blockSize);
-
 }
 #undef max
 #undef min
@@ -1692,7 +1685,7 @@ std::uint64_t FlacPP::FlacDecoder::seekSample(std::uint64_t sample)
 			_stream->seek(maxFrameSearchPos);
 		}
 		
-			if (!findNextFrameHeader(_stream.get(), header, _streamInfo, sample)) {
+			if (!findNextFrameHeader(_stream.get(), header, _streamInfo, sample, _outputBufferCache, _residualBufferCache)) {
 				_stream->seek(oldPos);
 				return header.firstSampleIndex;
 			}

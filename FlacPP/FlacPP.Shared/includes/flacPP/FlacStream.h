@@ -74,7 +74,7 @@ namespace FlacPP{
 		std::uint64_t _positionInInnerStream;
 		std::uint64_t _absolutePosition;
 		std::uint32_t _positionInBuffer;
-		const std::uint32_t _bufferLength = 1024 * 1024;
+		std::uint32_t _bufferLength;
 		std::uint32_t _loadedData;
 		std::unique_ptr<std::uint8_t[]> _buffer;
 		void seekForward(std::uint64_t amount);
@@ -82,7 +82,7 @@ namespace FlacPP{
 
 		std::uint32_t read(std::uint8_t buffer[], std::uint32_t bytes);
 	public:
-		BufferedInputStream(Windows::Storage::Streams::IRandomAccessStream^ innerStream, std::uint64_t streamLength);
+		BufferedInputStream(Windows::Storage::Streams::IRandomAccessStream^ innerStream, std::uint64_t streamLength, std::uint32_t bufferLength = 1024 * 1024);
 		bool isEof() {
 			return _absolutePosition == _innerStreamLength;
 		}

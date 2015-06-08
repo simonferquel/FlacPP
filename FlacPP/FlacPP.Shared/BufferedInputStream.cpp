@@ -116,14 +116,15 @@ void BufferedInputStream::seekBackward(std::uint64_t amount)
 	}
 }
 
-BufferedInputStream::BufferedInputStream(Windows::Storage::Streams::IRandomAccessStream ^ innerStream, std::uint64_t streamLength)
+BufferedInputStream::BufferedInputStream(Windows::Storage::Streams::IRandomAccessStream ^ innerStream, std::uint64_t streamLength, std::uint32_t bufferLength)
 	: _innerStream(innerStream),
 	_innerStreamLength(streamLength),
 	_positionInInnerStream(0),
 	_absolutePosition(0),
 	_positionInBuffer(0),
 	_loadedData(0),
-	_buffer(new std::uint8_t[_bufferLength])
+	_bufferLength(bufferLength),
+	_buffer(new std::uint8_t[bufferLength])
 {
 }
 
