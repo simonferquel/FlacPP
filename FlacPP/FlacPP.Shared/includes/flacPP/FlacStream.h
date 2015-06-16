@@ -16,6 +16,7 @@ namespace FlacPP{
 		virtual void seek(std::uint64_t absolutePos) = 0;
 		virtual void readIntoBuffer(std::uint32_t size, FlacBufferView& buffer) = 0;
 		virtual std::uint8_t readOneByte() = 0;
+		virtual ~IFlacStream() {}
 	};
 
 	// implementation of IFlacStream over a std::istream (or derived)
