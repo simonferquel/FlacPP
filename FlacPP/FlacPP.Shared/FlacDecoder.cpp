@@ -55,7 +55,7 @@ void restoreLpcSignal(const std::vector<std::int32_t>& residual, std::vector<std
 			auto h = output[ix];
 			res += (std::int64_t)coeff*(std::int64_t)h;
 		}
-		
+
 		output[order + ix] = residual[ix] + (std::int32_t)(res >> lp_quantization);
 	}
 
@@ -64,127 +64,127 @@ void restoreLpcSignal(const std::vector<std::int32_t>& residual, std::vector<std
 	/*switch (order)
 	{
 	case 0:
-		restoreLpcSignal<0>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<0>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 1:
-		restoreLpcSignal<1>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<1>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 2:
-		restoreLpcSignal<2>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<2>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 3:
-		restoreLpcSignal<3>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<3>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 4:
-		restoreLpcSignal<4>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<4>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 5:
-		restoreLpcSignal<5>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<5>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 6:
-		restoreLpcSignal<6>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<6>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 7:
-		restoreLpcSignal<7>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<7>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 8:
-		restoreLpcSignal<8>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<8>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 9:
-		restoreLpcSignal<9>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<9>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 10:
-		restoreLpcSignal<10>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<10>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 11:
-		restoreLpcSignal<11>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<11>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 12:
-		restoreLpcSignal<12>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<12>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 13:
-		restoreLpcSignal<13>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<13>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 14:
-		restoreLpcSignal<14>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<14>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 15:
-		restoreLpcSignal<15>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<15>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 16:
-		restoreLpcSignal<16>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<16>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 17:
-		restoreLpcSignal<17>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<17>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 18:
-		restoreLpcSignal<18>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<18>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 19:
-		restoreLpcSignal<19>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<19>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 20:
-		restoreLpcSignal<20>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<20>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 21:
-		restoreLpcSignal<21>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<21>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 22:
-		restoreLpcSignal<22>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<22>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 23:
-		restoreLpcSignal<23>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<23>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 24:
-		restoreLpcSignal<24>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<24>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 25:
-		restoreLpcSignal<25>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<25>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 26:
-		restoreLpcSignal<26>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<26>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 27:
-		restoreLpcSignal<27>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<27>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 28:
-		restoreLpcSignal<28>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<28>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 29:
-		restoreLpcSignal<29>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<29>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 30:
-		restoreLpcSignal<30>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<30>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 31:
-		restoreLpcSignal<31>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<31>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 32:
-		restoreLpcSignal<32>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal<32>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 
 	default:
-		break;
+	break;
 	}*/
-unsigned  j;
-std::reverse(qlpCoeffs.begin(), qlpCoeffs.end());
-for (auto ix = 0u; ix < residual.size(); ++ix) {
-	std::int64_t res = 0;
-	auto pairwiseCount = order / 2;
-	for (j = 0; j < pairwiseCount; j++) {
-		int32x2_t coeffs = vld1_s32((&qlpCoeffs[order - (j + 1) * 2]));
-		int32x2_t hs = vld1_s32(&output[order + ix - (j + 1) * 2]);
-		int64x2_t mul = vmull_s32(coeffs, hs);
-		int64x1_t partialSum = vadd_s64(vget_high_s64(mul), vget_low_s64(mul));
-		res += partialSum.n64_i64[0];
+	unsigned  j;
+	std::reverse(qlpCoeffs.begin(), qlpCoeffs.end());
+	for (auto ix = 0u; ix < residual.size(); ++ix) {
+		std::int64_t res = 0;
+		auto pairwiseCount = order / 2;
+		for (j = 0; j < pairwiseCount; j++) {
+			int32x2_t coeffs = vld1_s32((&qlpCoeffs[order - (j + 1) * 2]));
+			int32x2_t hs = vld1_s32(&output[order + ix - (j + 1) * 2]);
+			int64x2_t mul = vmull_s32(coeffs, hs);
+			int64x1_t partialSum = vadd_s64(vget_high_s64(mul), vget_low_s64(mul));
+			res += partialSum.n64_i64[0];
+		}
+		if (order % 2 == 1) {
+			auto coeff = qlpCoeffs[0];
+			auto h = output[ix];
+			res += (std::int64_t)coeff*(std::int64_t)h;
+		}
+		output[order + ix] = residual[ix] + (std::int32_t)(res >> lp_quantization);
 	}
-	if (order % 2 == 1) {
-		auto coeff = qlpCoeffs[0];
-		auto h = output[ix];
-		res += (std::int64_t)coeff*(std::int64_t)h;
-	}
-	output[order + ix] = residual[ix] + (std::int32_t)(res >> lp_quantization);
-}
 }
 
 template<std::uint32_t order>
@@ -195,9 +195,9 @@ void restoreLpcSignal_32bit(const std::vector<std::int32_t>& residual, std::vect
 		int64x2_t sum = { 0,0 };
 		auto pairwiseCount = order / 2;
 		for (j = 0; j < pairwiseCount; j++) {
-			int32x2_t coeffs = vld1_s32((&qlpCoeffs[order-(j+1)*2]));
-			int32x2_t hs = vld1_s32(&output[order + ix - (j+1)*2]);
-			sum = vmlal_s32(sum, coeffs, hs);			
+			int32x2_t coeffs = vld1_s32((&qlpCoeffs[order - (j + 1) * 2]));
+			int32x2_t hs = vld1_s32(&output[order + ix - (j + 1) * 2]);
+			sum = vmlal_s32(sum, coeffs, hs);
 		}
 		int64x1_t sumAll = vadd_s64(vget_high_s64(sum), vget_low_s64(sum));
 		std::int64_t res = sumAll.n64_i64[0];
@@ -214,135 +214,135 @@ void restoreLpcSignal_32bit(const std::vector<std::int32_t>& residual, std::vect
 void restoreLpcSignal_32bit(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::vector<std::int32_t>& output) {
 	/*switch (order) {
 	case 0:
-		restoreLpcSignal_32bit<0>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<0>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 1:
-		restoreLpcSignal_32bit<1>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<1>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 2:
-		restoreLpcSignal_32bit<2>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<2>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 3:
-		restoreLpcSignal_32bit<3>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<3>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 4:
-		restoreLpcSignal_32bit<4>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<4>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 5:
-		restoreLpcSignal_32bit<5>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<5>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 6:
-		restoreLpcSignal_32bit<6>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<6>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 7:
-		restoreLpcSignal_32bit<7>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<7>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 8:
-		restoreLpcSignal_32bit<8>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<8>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 9:
-		restoreLpcSignal_32bit<9>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<9>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 10:
-		restoreLpcSignal_32bit<10>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<10>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 11:
-		restoreLpcSignal_32bit<11>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<11>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 12:
-		restoreLpcSignal_32bit<12>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<12>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 13:
-		restoreLpcSignal_32bit<13>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<13>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 14:
-		restoreLpcSignal_32bit<14>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<14>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 15:
-		restoreLpcSignal_32bit<15>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<15>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 16:
-		restoreLpcSignal_32bit<16>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<16>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 17:
-		restoreLpcSignal_32bit<17>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<17>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 18:
-		restoreLpcSignal_32bit<18>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<18>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 19:
-		restoreLpcSignal_32bit<19>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<19>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 20:
-		restoreLpcSignal_32bit<20>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<20>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 21:
-		restoreLpcSignal_32bit<21>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<21>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 22:
-		restoreLpcSignal_32bit<22>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<22>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 23:
-		restoreLpcSignal_32bit<23>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<23>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 24:
-		restoreLpcSignal_32bit<24>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<24>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 25:
-		restoreLpcSignal_32bit<25>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<25>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 26:
-		restoreLpcSignal_32bit<26>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<26>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 27:
-		restoreLpcSignal_32bit<27>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<27>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 28:
-		restoreLpcSignal_32bit<28>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<28>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 29:
-		restoreLpcSignal_32bit<29>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<29>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 30:
-		restoreLpcSignal_32bit<30>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<30>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 31:
-		restoreLpcSignal_32bit<31>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<31>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 32:
-		restoreLpcSignal_32bit<32>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_32bit<32>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 
 	}*/
-unsigned  j;
-std::reverse(qlpCoeffs.begin(), qlpCoeffs.end());
-for (auto ix = 0u; ix < residual.size(); ++ix) {
-	int64x2_t sum = { 0, 0 };
-	auto pairwiseCount = order / 2;
-	for (j = 0; j < pairwiseCount; j++) {
-		int32x2_t coeffs = vld1_s32((&qlpCoeffs[order - (j + 1) * 2]));
-		int32x2_t hs = vld1_s32(&output[order + ix - (j + 1) * 2]);
-		sum = vmlal_s32(sum, coeffs, hs);
+	unsigned  j;
+	std::reverse(qlpCoeffs.begin(), qlpCoeffs.end());
+	for (auto ix = 0u; ix < residual.size(); ++ix) {
+		int64x2_t sum = { 0, 0 };
+		auto pairwiseCount = order / 2;
+		for (j = 0; j < pairwiseCount; j++) {
+			int32x2_t coeffs = vld1_s32((&qlpCoeffs[order - (j + 1) * 2]));
+			int32x2_t hs = vld1_s32(&output[order + ix - (j + 1) * 2]);
+			sum = vmlal_s32(sum, coeffs, hs);
+		}
+		int64x1_t sumAll = vadd_s64(vget_high_s64(sum), vget_low_s64(sum));
+		std::int64_t res = sumAll.n64_i64[0];
+		if (order % 2 == 1) {
+			auto coeff = qlpCoeffs[0];
+			auto h = output[ix];
+			res += (std::int64_t)coeff*(std::int64_t)h;
+		}
+		output[order + ix] = residual[ix] + (std::int32_t)(res >> lp_quantization);
 	}
-	int64x1_t sumAll = vadd_s64(vget_high_s64(sum), vget_low_s64(sum));
-	std::int64_t res = sumAll.n64_i64[0];
-	if (order % 2 == 1) {
-		auto coeff = qlpCoeffs[0];
-		auto h = output[ix];
-		res += (std::int64_t)coeff*(std::int64_t)h;
-	}
-	output[order + ix] = residual[ix] + (std::int32_t)(res >> lp_quantization);
-}
 }
 template<std::uint32_t order>
 void restoreLpcSignal_16bit(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::vector<std::int32_t>& output) {
 	unsigned  j;
 	std::reverse(qlpCoeffs.begin(), qlpCoeffs.end());
 	for (auto ix = 0u; ix < residual.size();++ix) {
-		int32x4_t sum = { 0,0};
+		int32x4_t sum = { 0,0 };
 		auto quadwiseCount = order / 4;
 		for (j = 0; j < quadwiseCount; j++) {
-			int32x4_t coeffs = vld1q_s32((&qlpCoeffs[order - (j+1) * 4]));
+			int32x4_t coeffs = vld1q_s32((&qlpCoeffs[order - (j + 1) * 4]));
 			int32x4_t hs = vld1q_s32(&output[order + ix - (j + 1) * 4]);
 			sum = vmlaq_s32(sum, coeffs, hs);
 		}
@@ -357,12 +357,12 @@ void restoreLpcSignal_16bit(const std::vector<std::int32_t>& residual, std::vect
 		auto remaining = order % 4;
 		if (remaining >= 2) {
 			auto j = quadwiseCount * 2;
-			int32x2_t coeffs = vld1_s32((&qlpCoeffs[order - (j+1) * 2]));
+			int32x2_t coeffs = vld1_s32((&qlpCoeffs[order - (j + 1) * 2]));
 			int32x2_t hs = vld1_s32(&output[order + ix - (j + 1) * 2]);
-			int32x2_t m = vmul_s32( coeffs, hs);
+			int32x2_t m = vmul_s32(coeffs, hs);
 			res += (m.n64_i32[0] + m.n64_i32[1]);
 		}
-		
+
 		output[order + ix] = residual[ix] + (std::int32_t)(res >> lp_quantization);
 	}
 
@@ -370,135 +370,135 @@ void restoreLpcSignal_16bit(const std::vector<std::int32_t>& residual, std::vect
 void restoreLpcSignal_16bit(const std::vector<std::int32_t>& residual, std::vector<std::int32_t>& qlpCoeffs, std::int32_t lp_quantization, std::uint32_t order, std::vector<std::int32_t>& output) {
 	/*switch (order) {
 	case 0:
-		restoreLpcSignal_16bit<0>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<0>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 1:
-		restoreLpcSignal_16bit<1>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<1>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 2:
-		restoreLpcSignal_16bit<2>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<2>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 3:
-		restoreLpcSignal_16bit<3>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<3>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 4:
-		restoreLpcSignal_16bit<4>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<4>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 5:
-		restoreLpcSignal_16bit<5>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<5>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 6:
-		restoreLpcSignal_16bit<6>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<6>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 7:
-		restoreLpcSignal_16bit<7>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<7>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 8:
-		restoreLpcSignal_16bit<8>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<8>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 9:
-		restoreLpcSignal_16bit<9>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<9>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 10:
-		restoreLpcSignal_16bit<10>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<10>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 11:
-		restoreLpcSignal_16bit<11>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<11>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 12:
-		restoreLpcSignal_16bit<12>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<12>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 13:
-		restoreLpcSignal_16bit<13>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<13>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 14:
-		restoreLpcSignal_16bit<14>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<14>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 15:
-		restoreLpcSignal_16bit<15>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<15>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 16:
-		restoreLpcSignal_16bit<16>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<16>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 17:
-		restoreLpcSignal_16bit<17>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<17>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 18:
-		restoreLpcSignal_16bit<18>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<18>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 19:
-		restoreLpcSignal_16bit<19>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<19>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 20:
-		restoreLpcSignal_16bit<20>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<20>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 21:
-		restoreLpcSignal_16bit<21>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<21>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 22:
-		restoreLpcSignal_16bit<22>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<22>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 23:
-		restoreLpcSignal_16bit<23>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<23>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 24:
-		restoreLpcSignal_16bit<24>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<24>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 25:
-		restoreLpcSignal_16bit<25>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<25>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 26:
-		restoreLpcSignal_16bit<26>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<26>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 27:
-		restoreLpcSignal_16bit<27>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<27>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 28:
-		restoreLpcSignal_16bit<28>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<28>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 29:
-		restoreLpcSignal_16bit<29>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<29>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 30:
-		restoreLpcSignal_16bit<30>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<30>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 31:
-		restoreLpcSignal_16bit<31>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<31>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 	case 32:
-		restoreLpcSignal_16bit<32>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
-		break;
+	restoreLpcSignal_16bit<32>(residual, qlpCoeffs, lp_quantization, bps, output, 0);
+	break;
 
 	}*/
-unsigned  j;
-std::reverse(qlpCoeffs.begin(), qlpCoeffs.end());
-for (auto ix = 0u; ix < residual.size(); ++ix) {
-	int32x4_t sum = { 0, 0 };
-	auto quadwiseCount = order / 4;
-	for (j = 0; j < quadwiseCount; j++) {
-		int32x4_t coeffs = vld1q_s32((&qlpCoeffs[order - (j + 1) * 4]));
-		int32x4_t hs = vld1q_s32(&output[order + ix - (j + 1) * 4]);
-		sum = vmlaq_s32(sum, coeffs, hs);
-	}
-	std::int32_t quad[4];
-	vst1q_s32(quad, sum);
-	auto res = quad[0] + quad[1] + quad[2] + quad[3];
-	if (order % 2 == 1) {
-		auto coeff = qlpCoeffs[0];
-		auto h = output[ix];
-		res += (std::int64_t)coeff*(std::int64_t)h;
-	}
-	auto remaining = order % 4;
-	if (remaining >= 2) {
-		auto j = quadwiseCount * 2;
-		int32x2_t coeffs = vld1_s32((&qlpCoeffs[order - (j + 1) * 2]));
-		int32x2_t hs = vld1_s32(&output[order + ix - (j + 1) * 2]);
-		int32x2_t m = vmul_s32(coeffs, hs);
-		res += (m.n64_i32[0] + m.n64_i32[1]);
-	}
+	unsigned  j;
+	std::reverse(qlpCoeffs.begin(), qlpCoeffs.end());
+	for (auto ix = 0u; ix < residual.size(); ++ix) {
+		int32x4_t sum = { 0, 0 };
+		auto quadwiseCount = order / 4;
+		for (j = 0; j < quadwiseCount; j++) {
+			int32x4_t coeffs = vld1q_s32((&qlpCoeffs[order - (j + 1) * 4]));
+			int32x4_t hs = vld1q_s32(&output[order + ix - (j + 1) * 4]);
+			sum = vmlaq_s32(sum, coeffs, hs);
+		}
+		std::int32_t quad[4];
+		vst1q_s32(quad, sum);
+		auto res = quad[0] + quad[1] + quad[2] + quad[3];
+		if (order % 2 == 1) {
+			auto coeff = qlpCoeffs[0];
+			auto h = output[ix];
+			res += (std::int64_t)coeff*(std::int64_t)h;
+		}
+		auto remaining = order % 4;
+		if (remaining >= 2) {
+			auto j = quadwiseCount * 2;
+			int32x2_t coeffs = vld1_s32((&qlpCoeffs[order - (j + 1) * 2]));
+			int32x2_t hs = vld1_s32(&output[order + ix - (j + 1) * 2]);
+			int32x2_t m = vmul_s32(coeffs, hs);
+			res += (m.n64_i32[0] + m.n64_i32[1]);
+		}
 
-	output[order + ix] = residual[ix] + (std::int32_t)(res >> lp_quantization);
-}
+		output[order + ix] = residual[ix] + (std::int32_t)(res >> lp_quantization);
+	}
 }
 #else
 
@@ -554,11 +554,11 @@ void restoreFixedSignal(const std::vector<std::int32_t>& residual, const std::ui
 		for (auto ix = 0u;ix < residual.size();++ix) {
 			output[ix] = residual[ix];
 		}
-		
+
 		break;
 	case 1:
 		for (auto ix = 0u;ix < residual.size();++ix) {
-			output[ix+order] = residual[ix] + output[ix +order - 1];
+			output[ix + order] = residual[ix] + output[ix + order - 1];
 		}
 		break;
 	case 2:
@@ -583,7 +583,7 @@ void restoreFixedSignal(const std::vector<std::int32_t>& residual, const std::ui
 	}
 }
 
-void readConstantSubFrameContent(FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, const std::uint32_t blockSize,  bool validateOnly) {
+void readConstantSubFrameContent(FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, const std::uint32_t blockSize, bool validateOnly) {
 	outputBuffer.resize(blockSize);
 	auto constant = stream->readPartialInt32(usefulBps);
 	if (!validateOnly) {
@@ -763,98 +763,98 @@ bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::v
 	return true;
 }
 bool readFixedSubFrameContent(std::uint32_t order, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, bool validateOnly, FlacPP::temp_buffer_cache& residualCache) {
-	
+
 	switch (usefulBps) {
 	case 1:
 		return readFixedSubFrameContent<1>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 2:
 		return readFixedSubFrameContent<2>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 3:
 		return readFixedSubFrameContent<3>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 4:
 		return readFixedSubFrameContent<4>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 5:
 		return readFixedSubFrameContent<5>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 6:
 		return readFixedSubFrameContent<6>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 7:
 		return readFixedSubFrameContent<7>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 8:
 		return readFixedSubFrameContent<8>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 9:
 		return readFixedSubFrameContent<9>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 10:
 		return readFixedSubFrameContent<10>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 11:
 		return readFixedSubFrameContent<11>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 12:
 		return readFixedSubFrameContent<12>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 13:
 		return readFixedSubFrameContent<13>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 14:
 		return readFixedSubFrameContent<14>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 15:
 		return readFixedSubFrameContent<15>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 16:
 		return readFixedSubFrameContent<16>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 17:
 		return readFixedSubFrameContent<17>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 18:
 		return readFixedSubFrameContent<18>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 19:
 		return readFixedSubFrameContent<19>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 20:
 		return readFixedSubFrameContent<20>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 21:
 		return readFixedSubFrameContent<21>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 22:
 		return readFixedSubFrameContent<22>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 23:
 		return readFixedSubFrameContent<23>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 24:
 		return readFixedSubFrameContent<24>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 25:
 		return readFixedSubFrameContent<25>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 26:
 		return readFixedSubFrameContent<26>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 27:
 		return readFixedSubFrameContent<27>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 28:
 		return readFixedSubFrameContent<28>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 29:
 		return readFixedSubFrameContent<29>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 30:
 		return readFixedSubFrameContent<30>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
-		
+
 	case 31:
 		return readFixedSubFrameContent<31>(order, stream, outputBuffer, blockSize, validateOnly, residualCache);
 	case 32:
@@ -871,9 +871,9 @@ static inline std::uint32_t FLAC__bitmath_ilog2(std::uint32_t v)
 {
 #ifdef _MSC_VER
 
-		unsigned long idx;
-		_BitScanReverse(&idx, v);
-		return idx;
+	unsigned long idx;
+	_BitScanReverse(&idx, v);
+	return idx;
 #else
 	return 31 - __builtin_clz(v);
 #endif
@@ -961,7 +961,7 @@ bool readLpcSubFrameContent(std::uint32_t predictorOrder, FlacBitStream* stream,
 	return true;
 }
 
-bool readLpcSubFrameContent(std::uint32_t predictorOrder,FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, bool validateOnly, FlacPP::temp_buffer_cache& residualCache) {
+bool readLpcSubFrameContent(std::uint32_t predictorOrder, FlacBitStream* stream, std::vector<std::int32_t>& outputBuffer, std::uint8_t usefulBps, std::uint32_t blockSize, bool validateOnly, FlacPP::temp_buffer_cache& residualCache) {
 	switch (usefulBps) {
 	case 1:
 		return readLpcSubFrameContent<1>(predictorOrder, stream, outputBuffer, blockSize, validateOnly, residualCache);
@@ -1078,9 +1078,9 @@ bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::vector
 
 	// adjust bps for special channel assignments
 
-	
+
 	std::uint32_t order = 0;
-	
+
 	if (wastedBits == 1) {
 		wastedBits = stream->readUnaryUnsigned() + 1;
 	}
@@ -1129,7 +1129,7 @@ bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::vector
 			}
 			throw FlacDecodingException();
 		}
-		if (!readFixedSubFrameContent( order, stream, outputBuffer, bps, frameHeader.blockSize, validateOnly, residualCache)) {
+		if (!readFixedSubFrameContent(order, stream, outputBuffer, bps, frameHeader.blockSize, validateOnly, residualCache)) {
 			if (validateOnly) {
 				return false;
 			}
@@ -1154,8 +1154,8 @@ bool readSubframe(std::uint16_t channelIndex, FlacBitStream* stream, std::vector
 
 	if (wastedBits != 0 && !validateOnly) {
 		for (auto ix = 0u; ix < frameHeader.blockSize; ix++) {
-			auto val =  (std::uint32_t)outputBuffer[ix];
-			outputBuffer[ix] = (std::int32_t)( val << wastedBits);
+			auto val = (std::uint32_t)outputBuffer[ix];
+			outputBuffer[ix] = (std::int32_t)(val << wastedBits);
 		}
 	}
 
@@ -1233,7 +1233,7 @@ FlacPP::FlacDecoder::FlacDecoder(std::unique_ptr<IFlacStream>&& stream)
 
 time_unit_100ns FlacPP::FlacDecoder::seek(const time_unit_100ns& ts) {
 	auto sample = static_cast<std::uint64_t>(ts.count())*_streamInfo.sampleRate / 10000000;
-	
+
 
 	return time_unit_100ns(seekSample(sample) * 10000000 / _streamInfo.sampleRate);
 }
@@ -1403,7 +1403,7 @@ bool findNextFrameHeader(FlacPP::IFlacStream* stream, frame_header& header, cons
 			continue;
 		}
 
-		
+
 
 		// sync code found.
 		// peek header
@@ -1428,7 +1428,7 @@ bool findNextFrameHeader(FlacPP::IFlacStream* stream, frame_header& header, cons
 		if (b == computedCrc) {
 			//crc checked ! 
 			// check subFramesCrc
-			
+
 			bool allValid = true;
 			{
 				FlacBitStream fbs(stream);
@@ -1451,7 +1451,7 @@ bool findNextFrameHeader(FlacPP::IFlacStream* stream, frame_header& header, cons
 				auto sizeOfCrcedData = stream->position() - headPos;
 				readFromStream(stream, readCrc);
 				readCrc = FlacPP::swapEndiannes(readCrc);
-				
+
 				stream->seek(headPos);
 				std::uint16_t computedContentCrc = 0;
 				for (auto ix = 0ull;ix < sizeOfCrcedData;++ix) {
@@ -1470,7 +1470,7 @@ bool findNextFrameHeader(FlacPP::IFlacStream* stream, frame_header& header, cons
 					}
 				}
 			}
-			
+
 		}
 		headPos += 1;
 		stream->seek(headPos);
@@ -1499,7 +1499,7 @@ void FlacPP::FlacDecoder::decodeNextFrame(time_unit_100ns & frameTime, FlacBuffe
 	if (_stream->position() == _stream->size()) {
 		return;
 	}
-	
+
 	frame_header_fixed_part_raw fixedPartOfHeader;
 	readFromStream(_stream.get(), fixedPartOfHeader);
 
@@ -1671,38 +1671,38 @@ std::uint64_t FlacPP::FlacDecoder::seekSample(std::uint64_t sample)
 	// relativePos
 	auto relativeSeekPos = static_cast<double>(sample) / static_cast<double>(_streamInfo.totalSamples);
 	auto minFrameSearchPos = _posOfFirstFrame;
-	auto maxFrameSearchPos = _stream->size()- _streamInfo.maxFrameSizeInBytes;
-	
+	auto maxFrameSearchPos = _stream->size() - _streamInfo.maxFrameSizeInBytes;
+
 	auto startSeekOffset = static_cast<std::uint64_t>((minFrameSearchPos + (maxFrameSearchPos - minFrameSearchPos)*relativeSeekPos));
 	_stream->seek(startSeekOffset);
 	for (;;) {
-		
-		
+
+
 		if (_stream->position() < minFrameSearchPos) {
 			_stream->seek(minFrameSearchPos);
 		}
 		if (_stream->position() > maxFrameSearchPos) {
 			_stream->seek(maxFrameSearchPos);
 		}
-		
-			if (!findNextFrameHeader(_stream.get(), header, _streamInfo, sample, _outputBufferCache, _residualBufferCache)) {
-				_stream->seek(oldPos);
-				return header.firstSampleIndex;
-			}
-			
-					
-		
+		auto lastSeekPos = _stream->position();
+		if (!findNextFrameHeader(_stream.get(), header, _streamInfo, sample, _outputBufferCache, _residualBufferCache)) {
+			_stream->seek(oldPos);
+			return header.firstSampleIndex;
+		}
+
+
+
 		if (sample >= header.firstSampleIndex && sample < header.firstSampleIndex + header.blockSize) {
 			return header.firstSampleIndex;
 		}
 		else if (sample >= header.firstSampleIndex + header.blockSize) {
 
 			minFrameSearchPos = std::max(minFrameSearchPos, _stream->position() + _streamInfo.minFrameSizeInBytes);
-			
+
 			_stream->seek(minFrameSearchPos);
 		}
 		else if (sample < header.firstSampleIndex) {
-
+			_stream->seek(lastSeekPos);
 			maxFrameSearchPos = std::min(maxFrameSearchPos, _stream->position() - 1);
 			if (_stream->position() < _streamInfo.maxFrameSizeInBytes) {
 				_stream->seek(0);
@@ -1712,7 +1712,7 @@ std::uint64_t FlacPP::FlacDecoder::seekSample(std::uint64_t sample)
 			}
 		}
 	}
-	
+
 }
 
 FlacPP::FlacDecoder::~FlacDecoder()
